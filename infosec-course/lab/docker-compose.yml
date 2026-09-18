@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # 1. Custom Vulnerable Backend (Python / Flask)
+  # Endpoints:
+  # - /api/v1/search (SQLi - Union & Blind Time-based)
+  # - /api/v1/fetch (SSRF - Cloud Metadata / Internal subnet)
+  # - /api/v1/coupon (Race Condition - Limit Overrun)
+  # - /api/v1/auth/jwt (Broken Auth - Key Confusion RSA vs HMAC)
+  # - /api/v1/diagnostic (OS Command Injection)
+  vulnerable-flask:
+    image: python:3.11-slim
+    container_name: lab-vulnerable-flask
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    command: >
+      sh -c "pip install flask pyjwt cryptography requests sqlite3-to-mysql && python app.py"
+    environment:
+      - FLASK_ENV=development
+      - PORT=5000
+    networks:
+      dmz_net:
+        ipv4_address: 172.28.1.10
+      internal_net:
+        ipv4_address: 172.28.2.10
+    restart: unless-stopped
+
+  # 2. Simulated Internal Metadata / Secrets Vault (Isolated internal subnet)
+  # Accessible ONLY from internal_net (simulates AWS IMDS / GCP metadata / K8s etcd)
+  internal-vault:
+    image: python:3.11-slim
+    container_name: lab-internal-vault
+    working_dir: /vault
+    volumes:
+      - ./vault:/vault
+    command: >
+      sh -c "pip install flask && python vault_server.py"
+    networks:
+      internal_net:
+        ipv4_address: 172.28.2.50
+    restart: unless-stopped
+
+  # 3. OWASP Juice Shop (Modern Vulnerable Web Application)
+  juiceshop:
+    image: bkimminich/juice-shop:v15.0.0
+    container_name: lab-juiceshop
+    ports:
+      - "3000:3000"
+    networks:
+      dmz_net:
+        ipv4_address: 172.28.1.30
+    restart: unless-stopped
+
+  # 4. NGINX Reverse Proxy & WAF (ModSecurity Ready)
+  waf-proxy:
+    image: owasp/modsecurity-crs:nginx-alpine
+    container_name: lab-waf-proxy
+    ports:
+      - "8080:80"
+    environment:
+      - PARANOIA=1
+      - BACKEND=http://172.28.1.10:5000
+    networks:
+      dmz_net:
+        ipv4_address: 172.28.1.2
+    depends_on:
+      - vulnerable-flask
+    restart: unless-stopped
+
+  # 5. Suricata Network IDS (Passive packet capture in DMZ)
+  suricata-ids:
+    image: jasonish/suricata:latest
+    container_name: lab-suricata
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+      - NET_RAW
+    volumes:
+      - ./suricata/suricata.yaml:/etc/suricata/suricata.yaml:ro
+      - ./suricata/rules:/var/lib/suricata/rules:rw
+      - ./suricata/logs:/var/log/suricata:rw
+    command: -i any -vv
+    restart: unless-stopped
+
+networks:
+  dmz_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.1.0/24
+  internal_net:
+    driver: bridge
+    internal: true # Полная изоляция от внешнего интернета!
+    ipam:
+      config:
+        - subnet: 172.28.2.0/24

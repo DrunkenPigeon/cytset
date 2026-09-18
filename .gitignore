@@ -1,0 +1,25 @@
+# Binaries / Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.spec
+venv/
+.env
+
+# Android Build
+cytset-android/build/
+cytset-android/.gradle/
+cytset-android/local.properties
+cytset-android/build/gen/
+
+# Desktop Build
+cytset-desktop/build/
+cytset-desktop/dist/
+
+# IDE / OS
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log
