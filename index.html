@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYTSET & CYBERSEC ACADEMY | Информационная безопасность</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --card-bg: rgba(20, 27, 45, 0.7);
+      --card-border: rgba(56, 189, 248, 0.2);
+      --primary: #58cc02;
+      --primary-hover: #46a302;
+      --accent: #00f2ff;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse 80% 80% at 50% -20%, rgba(0, 242, 255, 0.15), rgba(255, 255, 255, 0)),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+    h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+    h1 span.green { color: var(--primary); }
+    h1 span.cyan { color: var(--accent); }
+    .subtitle {
+      font-size: clamp(16px, 2.5vw, 18px);
+      color: var(--text-dim);
+      max-width: 680px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .hub-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .hub-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 242, 255, 0.5);
+      box-shadow: 0 24px 48px rgba(0, 242, 255, 0.15);
+    }
+    .card-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-green {
+      background: var(--primary);
+      color: #0b0f17;
+      box-shadow: 0 4px 0 #3d8c02;
+    }
+    .btn-green:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #3d8c02;
+    }
+    .btn-cyan {
+      background: var(--accent);
+      color: #0b0f17;
+      box-shadow: 0 4px 0 #009eb0;
+    }
+    .btn-cyan:hover {
+      background: #38f5ff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #009eb0;
+    }
+    .downloads {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .dl-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">🛡️ ENTERPRISE INFOSEC CURRICULUM</div>
+    <h1>CYT<span class="green">SET</span> & CYBER<span class="cyan">SEC</span></h1>
+    <p class="subtitle">Практический курс и тренажер по информационным атакам, их реализации и архитектурной защите. Подготовка к работе в SOC и учебе в вузе.</p>
+
+    <div class="grid">
+      <!-- Card 1: Cytset App -->
+      <div class="hub-card">
+        <div>
+          <div class="card-icon">🦉</div>
+          <h2 class="card-title">Приложение «cytset»</h2>
+          <p class="card-desc">Интерактивный микро-тренажер в стиле Duolingo: 30 дней, 270 вопросов, стрики, жизни, интервальное повторение и умная система работы над ошибками.</p>
+        </div>
+        <a href="cytset-android/assets/index.html" class="btn btn-green">ОТКРЫТЬ В БРАУЗЕРЕ ➔</a>
+      </div>
+
+      <!-- Card 2: Full Web Portal -->
+      <div class="hub-card">
+        <div>
+          <div class="card-icon">💻</div>
+          <h2 class="card-title">Веб-портал «CyberSec»</h2>
+          <p class="card-desc">Полноразмерная академия с подробными лекциями, интерактивным инспектором WAF, фильтрами ролей (Red Team, Blue Team, SOC) и Docker-стендом.</p>
+        </div>
+        <a href="infosec-course/index.html" class="btn btn-cyan">ОТКРЫТЬ ВЕБ-ПОРТАЛ ➔</a>
+      </div>
+    </div>
+
+    <!-- Direct Downloads -->
+    <div class="downloads">
+      <a href="cytset.apk" class="dl-btn" download>📱 Скачать APK (Android, 292 КБ)</a>
+      <a href="cytset.exe" class="dl-btn" download>💻 Скачать EXE (Windows, 13.7 МБ)</a>
+      <a href="https://github.com/DrunkenPigeon/cytset" class="dl-btn" target="_blank">⭐ Репозиторий GitHub</a>
+    </div>
+
+    <div class="footer">
+      Автор проекта: <a href="https://github.com/DrunkenPigeon" target="_blank">DrunkenPigeon</a> • Лицензия MIT
+    </div>
+  </div>
+</body>
+</html>
